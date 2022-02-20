@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;DatabaseName=CAPSTONE
+    username: root
+    password: root
+  jpa:    hibernate:      ddl-auto: create 
+    show-sql: true    database-platform: org.hibernate.dialect.SQLServer2012Dialect
+logging:
+  file:
+    path: D:\Work\capstone\log
+  level:
+    com:
+      edu:
+        capstone:
+          mapper: DEBUG
+    org:
+      springframework:
+        transaction:
+          interceptor: TRACE
+        security: DEBUG
