@@ -44,7 +44,7 @@ public class SpecializationService {
 		if (specialization == null) {
 			throw new EntityNotFoundException(ExceptionConstant.SPECIALIZATION_NOT_FOUND);
 		}
-		String[] nameArray = specialization.getName().split(""); 
+		String[] nameArray = specialization.getName().split(" "); 
 		// Get name code
 		String result = "";
 		for (int i = 0; i < nameArray.length; i++) {

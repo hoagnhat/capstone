@@ -45,7 +45,12 @@ public class AttendanceLogService {
 	}
 
 	public void takeAttendance(String studentId, int slotId, String status) {
-		AttendanceLog log = AttendanceLog.builder().studentId(studentId).slotId(slotId).status(status).build();
+		AttendanceLog log = logRepository.findBySlotIdAndStudentId(slotId, studentId);
+		if (log == null) {
+			log = AttendanceLog.builder().studentId(studentId).slotId(slotId).status(status).build();
+		} else {
+			log.setStatus(status);
+		}
 		logRepository.saveAndFlush(log);
 	}
 	
