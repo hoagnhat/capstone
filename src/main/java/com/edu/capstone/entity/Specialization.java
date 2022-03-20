@@ -16,6 +16,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import com.edu.capstone.common.constant.RegexConstant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,6 +43,7 @@ public class Specialization {
 	@Column(name = "name")
 	private String name; // Tên chuyên ngành
 	
+	@JsonIgnore
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToMany(mappedBy = "specializations")
 	private Set<Subject> subjects = new HashSet<>();

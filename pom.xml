@@ -12,6 +12,7 @@
 	<groupId>com.edu</groupId>
 	<artifactId>capstone</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>capstone</name>
 	<description>Capstone project</description>
 	<properties>

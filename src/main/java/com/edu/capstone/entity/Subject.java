@@ -15,8 +15,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,6 +51,7 @@ public class Subject {
 	@ManyToMany(cascade = { CascadeType.MERGE })
 	private Set<Specialization> specializations = new HashSet<>();
 
+	@JsonIgnore
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy = "subject", cascade = { CascadeType.MERGE })
 	private Set<Schedule> schedules = new HashSet<>();
