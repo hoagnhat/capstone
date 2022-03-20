@@ -20,6 +20,7 @@ import com.edu.capstone.entity.AttendanceLog;
 import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.request.AccountRequest;
 import com.edu.capstone.request.CreateScheduleRequest;
+import com.edu.capstone.request.SpecializationRequest;
 import com.edu.capstone.request.SubjectRequest;
 
 /**
@@ -57,7 +58,10 @@ public class AttendanceLogServiceTest {
 		String personalEmail = "hahng.nhat@gmail.com";
 		roleService.create(AppConstant.ROLE_STUDENT);
 		roleService.create(AppConstant.ROLE_TEACHER);
-		specializationService.create(spec);
+		SpecializationRequest rq = SpecializationRequest.builder()
+				.name(spec)
+				.build();
+		specializationService.create(rq, new HashSet<>());
 		AccountRequest request1 = AccountRequest.builder()
 				.roleId(roleService.findByRoleName(AppConstant.ROLE_STUDENT).getId())
 				.specializationId(specializationService.findByName(spec).getId())
