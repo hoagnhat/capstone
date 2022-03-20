@@ -1,7 +1,12 @@
 package com.edu.capstone.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.text.ParseException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.mail.MessagingException;
 
@@ -12,9 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.edu.capstone.common.constant.AppConstant;
 import com.edu.capstone.entity.AttendanceLog;
+import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.request.AccountRequest;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.edu.capstone.request.CreateScheduleRequest;
+import com.edu.capstone.request.SubjectRequest;
 
 /**
  * @author NhatHH
@@ -40,7 +46,7 @@ public class AttendanceLogServiceTest {
 	private SubjectService subjectService;
 	
 	@Test
-	public void testTakeAttendance() throws MessagingException {
+	public void testTakeAttendance() throws MessagingException, ParseException {
 		String studentId1;
 		String studentId2;
 		String studentId3;
@@ -99,10 +105,24 @@ public class AttendanceLogServiceTest {
 		classService.addStudent(studentId3, classId);
 		classService.addStudent(studentId4, classId);
 		
-		int subjectId = subjectService.create(1, specializationService.findByName(spec).getId());
+		Set<Specialization> specializations = new HashSet<>();
+		specializations.add(specializationService.findByName(spec));
+		SubjectRequest requestt = SubjectRequest.builder()
+				.name("Hello World")
+				.subjectCode("HW001")
+				.semester(1)
+				.build();
+		int subjectId = subjectService.create(requestt, specializations);
 		
-		Date date = new Date();
-		slotId = scheduleService.create(date, date, classId, studentId4, subjectId);
+		CreateScheduleRequest request = CreateScheduleRequest.builder()
+				.timeStart(new Date())
+				.timeEnd(new Date())
+				.classId(classId)
+				.subjectId(subjectId)
+				.teacherId(studentId4)
+				.room(201)
+				.build();
+		slotId = scheduleService.create(request);
 		
 		logService.takeAttendance(studentId1, slotId, AppConstant.ATTENDANCE_ABSENT_STATUS);
 		logService.takeAttendance(studentId2, slotId, AppConstant.ATTENDANCE_ABSENT_STATUS);

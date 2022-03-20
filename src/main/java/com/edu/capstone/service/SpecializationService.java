@@ -1,14 +1,18 @@
 package com.edu.capstone.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.edu.capstone.common.constant.ExceptionConstant;
 import com.edu.capstone.entity.Specialization;
+import com.edu.capstone.entity.Subject;
 import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.SpecializationRepository;
+import com.edu.capstone.request.SpecializationRequest;
 
 /**
  * @author NhatHH Date: Jan 31, 2022
@@ -58,10 +62,11 @@ public class SpecializationService {
 	 * 
 	 * @version 1.0 - Initiation (Jan 31, 2022 by <b>NhatHH</b>)
 	 */
-	public void create(String name) {
+	public void create(SpecializationRequest request, Set<Subject> subjects) {
 		// TODO: Check validate of name
 		Specialization specialization = Specialization.builder()
-				.name(name)
+				.name(request.getName())
+				.subjects(subjects)
 				.build();
 		specializationRepository.saveAndFlush(specialization);
 	}
@@ -71,13 +76,14 @@ public class SpecializationService {
 	 * 
 	 * @version 1.0 - Initiation (Feb 1, 2022 by <b>NhatHH</b>)
 	 */
-	public void update(int id, String name) {
+	public void update(int id, SpecializationRequest request, Set<Subject> subjects) {
 		// TODO: Need validate name
 		Specialization specialization = findById(id);
 		if (specialization == null) {
 			throw new EntityNotFoundException(ExceptionConstant.SPECIALIZATION_NOT_FOUND);
 		}
-		specialization.setName(name);
+		specialization.setName(request.getName());
+		specialization.setSubjects(subjects);
 		specializationRepository.saveAndFlush(specialization);
 	}
 	
@@ -98,6 +104,18 @@ public class SpecializationService {
 	public Specialization findByName(String name) {
 		// TODO: Need validate name
 		return specializationRepository.findByNameIgnoreCase(name);
+	}
+	
+	public List<Specialization> getAll() {
+		return specializationRepository.findAll();
+	}
+	
+	public Specialization getById(int id) {
+		Optional<Specialization> optional = specializationRepository.findById(id);
+		if (!optional.isPresent()) {
+			throw new EntityNotFoundException("Specialization not found");
+		}
+		return optional.get();
 	}
 
 }

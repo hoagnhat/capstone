@@ -41,6 +41,10 @@ public class Schedule {
 	private Date timeStart;
 	@Column(name = "time_end")
 	private Date timeEnd;
+	@Column(name = "date")
+	private Date date;
+	@Column(name = "room")
+	private int room;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToOne(cascade = { CascadeType.MERGE })

@@ -32,6 +32,7 @@ import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.AccountRepository;
 import com.edu.capstone.repository.ProfileRepository;
 import com.edu.capstone.request.AccountRequest;
+import com.edu.capstone.request.ChangePasswordRequest;
 
 /**
  * @author NhatHH Date: Jan 30, 2022
@@ -250,7 +251,7 @@ public class AccountService {
 	 * 
 	 * @version 1.0 - Initiation (Feb 6, 2022 by <b>NhatHH</b>)
 	 */
-	public void changePassword(String accountId, AccountRequest request) {
+	public void changePassword(ChangePasswordRequest request) {
 		Account current = getCurrentAccount();
 		// Check new password is match with confirm password
 		if (request.getNewPassword().equals(request.getConfirmPassword())) {

@@ -1,6 +1,7 @@
 package com.edu.capstone.service;
 
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,18 @@ public class ClassService {
 			return "";
 		}
 		return classs.getId();
+	}
+	
+	public Classs findById(String classId) {
+		Optional<Classs> optional = classRepository.findById(classId);
+		if (!optional.isPresent()) {
+			throw new EntityNotFoundException("Class not found");
+		}
+		return optional.get();
+	}
+	
+	public List<Classs> getAll() {
+		return classRepository.findAll();
 	}
 
 }

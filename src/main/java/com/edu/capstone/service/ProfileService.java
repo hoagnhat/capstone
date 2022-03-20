@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.edu.capstone.entity.Profile;
+import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.ProfileRepository;
+import com.edu.capstone.request.AccountRequest;
 
 /**
  * @author NhatHH Date: Feb 2, 2022
@@ -28,6 +30,21 @@ public class ProfileService {
 			return optional.get();
 		}
 		return null;
+	}
+	
+	public void update(String accountId, AccountRequest request) {
+		Profile profile = findByAccountId(accountId);
+		if (profile == null) {
+			throw new EntityNotFoundException("Profile not found");
+		}
+		profile.setName(request.getName());
+		profile.setAge(request.getAge());
+		profile.setAddress(request.getAddress());
+		profile.setAvatar(request.getAvatar());
+		profile.setGender(request.getGender());
+		profile.setPersonalEmail(request.getPersonalEmail());
+		profile.setPhone(request.getPhone());
+		profileRepository.saveAndFlush(profile);
 	}
 
 }
