@@ -5,11 +5,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.edu.capstone.common.constant.AppConstant;
+import com.edu.capstone.entity.Account;
+import com.edu.capstone.entity.AttendanceLog;
+import com.edu.capstone.entity.Role;
 import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.ScheduleRepository;
@@ -29,6 +34,8 @@ public class ScheduleService {
 	private AccountService accountService;
 	@Autowired
 	private SubjectService subjectService;
+	@Autowired
+	private AttendanceLogService logService;
 
 	public int create(CreateScheduleRequest request) throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
@@ -61,11 +68,49 @@ public class ScheduleService {
 		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		String nowStr = now.format(formatter1);
 		LocalDateTime nowEnd = LocalDateTime.parse(nowStr + " 23:59:59");
-		return scheduleRepository.findByTimeEndBetween(now, nowEnd);
+		Account current = accountService.getCurrentAccount();
+		List<Schedule> schedules = scheduleRepository.findByTimeEndBetween(now, nowEnd);
+		List<Schedule> result = new ArrayList<>();
+		for (Role role : current.getRoles()) {
+			if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
+				for (Schedule schedule : schedules) {
+					AttendanceLog log = logService.getBySlotIdAndStudentId(current.getId(), schedule.getId());
+					if (log != null) {
+						result.add(schedule);
+					}
+				}
+			} else if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
+				for (Schedule schedule : schedules) {
+					if (schedule.getTeacher().getId().equals(current.getId())) {
+						result.add(schedule);
+					}
+				}
+			}
+		}
+		return result;
 	}
 	
 	public List<Schedule> getUpcomingSchedule() {
-		return scheduleRepository.findByTimeStartAfter(LocalDateTime.now());
+		Account current = accountService.getCurrentAccount();
+		List<Schedule> schedules = scheduleRepository.findByTimeStartAfter(LocalDateTime.now());
+		List<Schedule> result = new ArrayList<>();
+		for (Role role : current.getRoles()) {
+			if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
+				for (Schedule schedule : schedules) {
+					AttendanceLog log = logService.getBySlotIdAndStudentId(current.getId(), schedule.getId());
+					if (log != null) {
+						result.add(schedule);
+					}
+				}
+			} else if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
+				for (Schedule schedule : schedules) {
+					if (schedule.getTeacher().getId().equals(current.getId())) {
+						result.add(schedule);
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 }

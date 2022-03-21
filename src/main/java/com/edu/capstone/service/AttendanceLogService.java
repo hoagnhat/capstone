@@ -54,4 +54,8 @@ public class AttendanceLogService {
 		logRepository.saveAndFlush(log);
 	}
 	
+	public AttendanceLog getBySlotIdAndStudentId(String studentId, int slotId) {
+		return logRepository.findBySlotIdAndStudentId(slotId, studentId);
+	}
+	
 }
