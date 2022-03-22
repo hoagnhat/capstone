@@ -69,18 +69,5 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		auth
 			.userDetailsService(customUserDetailsService)
 			.passwordEncoder(passwordEncoder);
-	}
-	@Bean
-	public WebMvcConfigurer corsConfigurer(){
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				// TODO Auto-generated method stub
-				registry.addMapping("/**")
-				.allowedMethods("GET","POST","PUT","DELETE")
-				.allowedHeaders("*")
-				.allowedOrigins("*");
-			}
-		};
 	}	
 }
