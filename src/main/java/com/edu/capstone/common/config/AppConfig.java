@@ -17,8 +17,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * @author NhatHH
- * Date: Jan 30, 2022
+ * @author NhatHH Date: Jan 30, 2022
  */
 @Configuration
 @EnableWebMvc
@@ -28,46 +27,49 @@ public class AppConfig {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Bean
 	public JavaMailSender javaMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
-		
+
 		mailSender.setUsername("capstone.help.center@gmail.com");
 		mailSender.setPassword("kggihtkxmrldixws");
-		
+
 		Properties props = mailSender.getJavaMailProperties();
 		props.put("mail.transport.protocol", "smtp");
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.debug", "true");
-		
+
 		return mailSender;
 	}
-	
+
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://capstone-web-server-nabati.herokuapp.com/"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
-                "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin",
-                "Cache-Control", "Content-Type"));
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-	
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList("https://capstone-web-server-nabati.herokuapp.com/"));
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
+		configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
+				"Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Cache-Control",
+				"Content-Type"));
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
+
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**");
+				registry.addMapping("/**")
+				.allowedMethods("GET", "POST", "PUT", "DELETE")
+				.allowedHeaders("*")
+			    .allowedOrigins("*");
 			}
 		};
 	}
-	
+
 }
