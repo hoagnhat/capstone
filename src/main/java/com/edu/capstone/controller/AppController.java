@@ -34,14 +34,12 @@ public class AppController {
 				.email("a@b.c")
 				.build();
 	}
-
-	@CrossOrigin(origins = "/**")
+	
 	@PostMapping(path = "/register", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public void register(@RequestBody AccountRequest request) throws MessagingException {
 		accountService.create(request);
 	}
-	
-	@CrossOrigin(origins = "/**")
+		
 	@PostMapping(path = "/login", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public void fakeLogin(@RequestBody LoginRequest request) {
 		// do login
