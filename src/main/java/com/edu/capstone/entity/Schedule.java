@@ -45,6 +45,8 @@ public class Schedule {
 	private Date date;
 	@Column(name = "room")
 	private int room;
+	@Column(name = "status")
+	private String status;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToOne(cascade = { CascadeType.MERGE })

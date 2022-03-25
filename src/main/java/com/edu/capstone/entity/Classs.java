@@ -48,11 +48,6 @@ public class Classs {
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "specialization_id", referencedColumnName = "id", insertable = true, updatable = true)
 	private Specialization specialization;
-
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToMany(cascade = { CascadeType.MERGE })
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	private Set<Subject> subjects = new HashSet<>();
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy = "classs", cascade = { CascadeType.MERGE })

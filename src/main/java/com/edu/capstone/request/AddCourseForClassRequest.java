@@ -1,6 +1,6 @@
 package com.edu.capstone.request;
 
-import java.util.List;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubjectRequest {
-
-	private String name;
-	private String subjectCode;
-	private int semester;
-	private int totalSlot;
-	private List<Integer> specializations;
+public class AddCourseForClassRequest {
 	
+	private int subjectId;
+	private String classId;
+	private String teacherId;
+	private Date startDate;
+	private Date endDate;
+
 }

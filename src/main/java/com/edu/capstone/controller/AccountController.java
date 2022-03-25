@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.capstone.entity.Account;
+import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Classs;
 import com.edu.capstone.entity.Role;
-import com.edu.capstone.entity.Subject;
+import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.response.AccountResponse;
 import com.edu.capstone.service.AccountService;
 
@@ -21,6 +22,8 @@ public class AccountController {
 	
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private ClassSubjectRepository csRepo;
 	
 	@GetMapping
 	public AccountResponse getCurrentAccountInformation() {
@@ -33,8 +36,9 @@ public class AccountController {
 		}
 		for (Classs sclass : account.getClasses()) {
 			classs.add(sclass.getId());
-			for (Subject subject : sclass.getSubjects()) {
-				subjects.add(subject.getSubjectCode());
+			List<ClassSubject> csubjectss = csRepo.findByKeyClassId(sclass.getId());
+			for (ClassSubject subject : csubjectss) {
+				subjects.add(subject.getSubject().getSubjectCode());
 			}
 		}
 		AccountResponse response = AccountResponse.builder()

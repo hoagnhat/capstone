@@ -11,9 +11,14 @@ import org.springframework.stereotype.Service;
 import com.edu.capstone.common.constant.AppConstant;
 import com.edu.capstone.common.constant.ExceptionConstant;
 import com.edu.capstone.entity.Account;
+import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Classs;
+import com.edu.capstone.entity.Subject;
+import com.edu.capstone.entity.key.CSKey;
 import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.ClassRepository;
+import com.edu.capstone.repository.ClassSubjectRepository;
+import com.edu.capstone.request.AddCourseForClassRequest;
 import com.edu.capstone.request.AddStudentIntoClassRequest;
 import com.edu.capstone.request.ClassRequest;
 
@@ -29,6 +34,10 @@ public class ClassService {
 	private SpecializationService specializationService;
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private SubjectService subjectService;
+	@Autowired
+	private ClassSubjectRepository csRepo;
 
 	public Classs getById(String classId) {
 		Optional<Classs> optional = classRepository.findById(classId);
@@ -89,6 +98,18 @@ public class ClassService {
 
 	public List<Classs> getAll() {
 		return classRepository.findAll();
+	}
+	
+	public void addCourse(AddCourseForClassRequest request) {
+		Account teacher = accountService.findById(request.getTeacherId());
+		Subject subject = subjectService.findById(request.getSubjectId());
+		CSKey key = CSKey.builder().classId(request.getClassId()).subjectId(request.getSubjectId()).build();
+		ClassSubject cs = ClassSubject.builder()
+				.key(key)
+				.teacher(teacher)
+				.subject(subject)
+				.build();
+		csRepo.saveAndFlush(cs);
 	}
 
 }

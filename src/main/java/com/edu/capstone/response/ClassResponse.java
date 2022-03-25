@@ -1,4 +1,4 @@
-package com.edu.capstone.request;
+package com.edu.capstone.response;
 
 import java.util.List;
 
@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubjectRequest {
+public class ClassResponse {
 
-	private String name;
-	private String subjectCode;
+	private String classId;
+	private List<ClassSubjectResponse> subjects;
 	private int semester;
-	private int totalSlot;
-	private List<Integer> specializations;
+	private String specialization;
+	private List<String> students;
 	
 }
