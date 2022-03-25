@@ -14,6 +14,7 @@ import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.Classs;
 import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.ClassRepository;
+import com.edu.capstone.request.ClassRequest;
 
 /**
  * @author NhatHH Date: Feb 20, 2022
@@ -36,13 +37,15 @@ public class ClassService {
 		return optional.get();
 	}
 
-	public String create(int semester, int specializationId) {
-		String classId = specializationService.getNameCode(specializationId) + generateNumberId(specializationService.getNameCode(specializationId));
-		Classs classs = Classs.builder()
-				.id(classId)
-				.semester(semester)
-				.specialization(specializationService.findById(specializationId)).build();
-		return classRepository.saveAndFlush(classs).getId();
+	public void create(ClassRequest request) {
+		String lastDigit = generateNumberId(specializationService.getNameCode(request.getSpecId()));
+		for (int i = Integer.parseInt(lastDigit); i < Integer.parseInt(lastDigit) + request.getSize(); i++) {
+			String classId = specializationService.getNameCode(request.getSpecId())
+					+ i; 
+			Classs classs = Classs.builder().id(classId).semester(request.getSemester())
+					.specialization(specializationService.findById(request.getSpecId())).build();
+			classRepository.saveAndFlush(classs).getId();
+		}
 	}
 
 	public void addStudent(String studentId, String classId) {
@@ -72,7 +75,7 @@ public class ClassService {
 		}
 		return classs.getId();
 	}
-	
+
 	public Classs findById(String classId) {
 		Optional<Classs> optional = classRepository.findById(classId);
 		if (!optional.isPresent()) {
@@ -80,7 +83,7 @@ public class ClassService {
 		}
 		return optional.get();
 	}
-	
+
 	public List<Classs> getAll() {
 		return classRepository.findAll();
 	}
