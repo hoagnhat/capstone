@@ -4,8 +4,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.ScheduleRepository;
 import com.edu.capstone.request.CreateScheduleRequest;
+import com.edu.capstone.request.ImportScheduleRequest;
 
 /**
  * @author NhatHH Date: Feb 20, 2022
@@ -38,22 +41,17 @@ public class ScheduleService {
 	private AttendanceLogService logService;
 
 	public int create(CreateScheduleRequest request) throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
-		String date = dateFormat.format(request.getTimeStart());
-		Schedule schedule = Schedule.builder().timeStart(request.getTimeStart()).timeEnd(request.getTimeEnd()).date(dateFormat.parse(date))
+		Schedule schedule = Schedule.builder().timeStart(request.getTimeStart()).timeEnd(request.getTimeEnd())
 				.classs(classService.getById(request.getClassId())).teacher(accountService.findById(request.getTeacherId()))
 				.subject(subjectService.findById(request.getSubjectId())).room(request.getRoom()).build();
 		return scheduleRepository.saveAndFlush(schedule).getId();
 	}
 	
 	public void update(int slotId, CreateScheduleRequest request) throws ParseException {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
-		String date = dateFormat.format(request.getTimeStart());
 		Schedule schedule = scheduleRepository.findById(slotId).get();
 		if (schedule == null) {
 			throw new EntityNotFoundException("Slot not found");
 		}
-		schedule.setDate(dateFormat.parse(date));
 		schedule.setRoom(request.getRoom());
 		schedule.setTimeStart(request.getTimeStart());
 		schedule.setTimeEnd(request.getTimeEnd());
@@ -111,6 +109,38 @@ public class ScheduleService {
 			}
 		}
 		return result;
+	}
+	
+	public void importSchedule(List<ImportScheduleRequest> request) {
+		for (ImportScheduleRequest schedule : request) {
+			LocalDateTime timeStart = convertToLocalDateTimeViaInstant(schedule.getTimeStart());
+			LocalDateTime timeEnd = convertToLocalDateTimeViaInstant(schedule.getTimeEnd());
+			for (int i = 0; i < 10; i++) {
+				timeStart.plusDays((long) i * 7);
+				timeEnd.plusDays((long) i * 7);
+				Schedule s = Schedule.builder()
+						.room(schedule.getRoom())
+						.timeStart(convertToDateViaInstant(timeStart))
+						.timeEnd(convertToDateViaInstant(timeEnd))
+						.classs(classService.findById(schedule.getClassId()))
+						.subject(subjectService.findById(schedule.getSubjectId()))
+						.teacher(accountService.findById(schedule.getTeacherId()))
+						.build();
+				scheduleRepository.saveAndFlush(s);
+			}
+		}
+	}
+	
+	public LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
+	    return dateToConvert.toInstant()
+	      .atZone(ZoneId.systemDefault())
+	      .toLocalDateTime();
+	}
+	
+	public Date convertToDateViaInstant(LocalDateTime dateToConvert) {
+	    return java.util.Date
+	      .from(dateToConvert.atZone(ZoneId.systemDefault())
+	      .toInstant());
 	}
 
 }

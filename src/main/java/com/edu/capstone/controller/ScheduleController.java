@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.request.CreateScheduleRequest;
+import com.edu.capstone.request.ImportScheduleRequest;
 import com.edu.capstone.response.ScheduleResponse;
 import com.edu.capstone.service.ProfileService;
 import com.edu.capstone.service.ScheduleService;
@@ -75,6 +76,11 @@ public class ScheduleController {
 	@PutMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public void update(@RequestParam("slotId") int slotId, @RequestBody CreateScheduleRequest request) throws ParseException {
 		scheduleService.update(slotId, request);
+	}
+	
+	@PostMapping("/import")
+	public void importSchedule(@RequestParam("schedules") List<ImportScheduleRequest> request) {
+		scheduleService.importSchedule(request);
 	}
 
 }
