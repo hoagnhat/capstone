@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.capstone.entity.Classs;
+import com.edu.capstone.request.AddStudentIntoClassRequest;
 import com.edu.capstone.request.ClassRequest;
 import com.edu.capstone.service.ClassService;
 
@@ -28,6 +29,11 @@ public class ClassController {
 	@PostMapping("/create")
 	public void addClass(@RequestBody ClassRequest request) {
 		classService.create(request);
+	}
+	
+	@PostMapping("/addstudent")
+	public void addStudent(@RequestBody AddStudentIntoClassRequest request) {
+		classService.addStudent(request);
 	}
 
 }

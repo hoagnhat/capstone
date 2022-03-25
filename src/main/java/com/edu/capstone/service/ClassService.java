@@ -14,6 +14,7 @@ import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.Classs;
 import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.ClassRepository;
+import com.edu.capstone.request.AddStudentIntoClassRequest;
 import com.edu.capstone.request.ClassRequest;
 
 /**
@@ -41,18 +42,19 @@ public class ClassService {
 		String lastDigit = generateNumberId(specializationService.getNameCode(request.getSpecId()));
 		for (int i = Integer.parseInt(lastDigit); i < Integer.parseInt(lastDigit) + request.getSize(); i++) {
 			DecimalFormat df = new DecimalFormat(AppConstant.CLASS_ID_FORMAT);
-			String classId = specializationService.getNameCode(request.getSpecId())
-					+ request.getKhoa() + df.format(i);
+			String classId = specializationService.getNameCode(request.getSpecId()) + request.getKhoa() + df.format(i);
 			Classs classs = Classs.builder().id(classId).semester(request.getSemester())
 					.specialization(specializationService.findById(request.getSpecId())).build();
 			classRepository.saveAndFlush(classs).getId();
 		}
 	}
 
-	public void addStudent(String studentId, String classId) {
-		Account student = accountService.findById(studentId);
-		Classs classs = getById(classId);
-		classs.getStudents().add(student);
+	public void addStudent(AddStudentIntoClassRequest request) {
+		for (String studentId : request.getStudentIds()) {
+			Account student = accountService.findById(studentId);
+			Classs classs = getById(request.getClassId());
+			classs.getStudents().add(student);
+		}
 	}
 
 	public String generateNumberId(String searchCode) {
