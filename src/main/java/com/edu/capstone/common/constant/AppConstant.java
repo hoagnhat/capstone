@@ -8,7 +8,7 @@ public class AppConstant {
 
 	public static final String EMAIL_DOMAIN = "@capstone.com";
 	public static final String ACCOUNT_ID_FORMAT = "00000";
-	public static final String CLASS_ID_FORMAT = "000";
+	public static final String CLASS_ID_FORMAT = "00";
 	
 	public static final String ROLE_STUDENT = "ROLE_STUDENT";
 	public static final String ROLE_TEACHER = "ROLE_TEACHER";

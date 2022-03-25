@@ -40,8 +40,9 @@ public class ClassService {
 	public void create(ClassRequest request) {
 		String lastDigit = generateNumberId(specializationService.getNameCode(request.getSpecId()));
 		for (int i = Integer.parseInt(lastDigit); i < Integer.parseInt(lastDigit) + request.getSize(); i++) {
+			DecimalFormat df = new DecimalFormat(AppConstant.CLASS_ID_FORMAT);
 			String classId = specializationService.getNameCode(request.getSpecId())
-					+ i; 
+					+ request.getKhoa() + df.format(i);
 			Classs classs = Classs.builder().id(classId).semester(request.getSemester())
 					.specialization(specializationService.findById(request.getSpecId())).build();
 			classRepository.saveAndFlush(classs).getId();
