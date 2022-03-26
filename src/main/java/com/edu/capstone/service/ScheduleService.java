@@ -161,5 +161,9 @@ public class ScheduleService {
 		}
 		return schedules;
 	}
+	
+	public List<Schedule> getByClassId(String classId) {
+		return scheduleRepository.findByClasssId(classId);
+	}
 
 }

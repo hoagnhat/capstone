@@ -18,5 +18,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 	List<Schedule> findByTimeEndBetween(LocalDateTime startTime, LocalDateTime endTime);
 	List<Schedule> findByTimeStartAfter(LocalDateTime startTime);
 	List<Schedule> findByTeacherId(String teacherId);
+	List<Schedule> findByClasssId(String classId);
 
 }

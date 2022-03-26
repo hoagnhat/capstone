@@ -87,5 +87,10 @@ public class ScheduleController {
 	public List<Schedule> getScheduleByAccountId(@RequestParam("accountId") String accountId) {
 		return scheduleService.getByAccountId(accountId);
 	}
+	
+	@GetMapping("/byclassid")
+	public List<Schedule> getScheduleByClassId(@RequestParam("classId") String classId) {
+		return scheduleService.getByClassId(classId);
+	}
 
 }
