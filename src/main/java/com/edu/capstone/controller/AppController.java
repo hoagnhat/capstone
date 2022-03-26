@@ -68,6 +68,7 @@ public class AppController {
 		return AccountResponse.builder()
 				.accountId(account.getId())
 				.name(profile.getName())
+				.avatar(profile.getAvatar())
 				.roles(roles)
 				.phone(profile.getPhone())
 				.address(profile.getAddress())
