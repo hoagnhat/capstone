@@ -48,7 +48,7 @@ public class ClassService {
 	}
 
 	public void create(ClassRequest request) {
-		String lastDigit = generateNumberId(specializationService.getNameCode(request.getSpecId()));
+		String lastDigit = generateNumberId(specializationService.getNameCode(request.getSpecId()) + request.getKhoa());
 		for (int i = Integer.parseInt(lastDigit); i < Integer.parseInt(lastDigit) + request.getSize(); i++) {
 			DecimalFormat df = new DecimalFormat(AppConstant.CLASS_ID_FORMAT);
 			String classId = specializationService.getNameCode(request.getSpecId()) + request.getKhoa() + df.format(i);
