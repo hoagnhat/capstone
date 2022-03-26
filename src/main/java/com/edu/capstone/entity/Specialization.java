@@ -40,7 +40,7 @@ public class Specialization {
 	@Column(name = "id")
 	private int id;
 	@Pattern(regexp = RegexConstant.NAME_REGEXP)
-	@Column(name = "name")
+	@Column(name = "name", unique = true)
 	private String name; // Tên chuyên ngành
 	
 	@JsonIgnore
