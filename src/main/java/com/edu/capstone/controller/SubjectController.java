@@ -16,11 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.capstone.entity.Account;
+import com.edu.capstone.entity.Profile;
 import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.entity.Subject;
 import com.edu.capstone.request.CreateSubjectRequest;
 import com.edu.capstone.request.SubjectRequest;
+import com.edu.capstone.response.StudentResponse;
 import com.edu.capstone.response.SubjectResponse;
+import com.edu.capstone.service.ProfileService;
 import com.edu.capstone.service.SpecializationService;
 import com.edu.capstone.service.SubjectService;
 
@@ -32,12 +36,24 @@ public class SubjectController {
 	private SubjectService subjectService;
 	@Autowired
 	private SpecializationService specService;
+	@Autowired
+	private ProfileService profileService;
 	
 	@GetMapping
 	public List<SubjectResponse> getAll() {
 		List<Subject> subjects = subjectService.getAll();
 		List<SubjectResponse> responses = new ArrayList<>();
 		for (Subject subject : subjects) {
+			List<StudentResponse> teachers = new ArrayList<>();
+			for (Account teacher : subject.getTeachers()) {
+				Profile profile = profileService.findByAccountId(teacher.getId());
+				StudentResponse teacherResponse = StudentResponse.builder()
+						.accountId(teacher.getId())
+						.name(profile.getName())
+						.avatar(profile.getAvatar())
+						.build();
+				teachers.add(teacherResponse);
+			}
 			SubjectResponse response = SubjectResponse.builder()
 					.id(subject.getId())
 					.name(subject.getName())
@@ -49,9 +65,38 @@ public class SubjectController {
 				specNameList.add(specService.getNameCode(spec.getId()));
 			}
 			response.setSpecializations(specNameList);
+			response.setTeachers(teachers);
 			responses.add(response);
 		}
 		return responses; 
+	}
+	
+	@GetMapping("/byid/{id}")
+	public SubjectResponse getById(@RequestParam("id") int id) {
+		Subject subject = subjectService.findById(id);
+		List<StudentResponse> teachers = new ArrayList<>();
+		for (Account teacher : subject.getTeachers()) {
+			Profile profile = profileService.findByAccountId(teacher.getId());
+			StudentResponse teacherResponse = StudentResponse.builder()
+					.accountId(teacher.getId())
+					.name(profile.getName())
+					.avatar(profile.getAvatar())
+					.build();
+			teachers.add(teacherResponse);
+		}
+		SubjectResponse response = SubjectResponse.builder()
+				.id(subject.getId())
+				.name(subject.getName())
+				.semester(subject.getSemester())
+				.subjectCode(subject.getSubjectCode())
+				.build();
+		List<String> specNameList = new ArrayList<>();
+		for (Specialization spec : subject.getSpecializations()) {
+			specNameList.add(specService.getNameCode(spec.getId()));
+		}
+		response.setSpecializations(specNameList);
+		response.setTeachers(teachers);
+		return response;
 	}
 	
 	@PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})

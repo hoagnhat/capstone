@@ -17,6 +17,7 @@ public class SubjectResponse {
 	private String name;
 	private int semester;
 	private String subjectCode;
+	private List<StudentResponse> teachers;
 	private List<String> specializations;
 	
 }

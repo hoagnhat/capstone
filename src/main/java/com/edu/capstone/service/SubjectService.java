@@ -1,5 +1,6 @@
 package com.edu.capstone.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.edu.capstone.common.constant.ExceptionConstant;
+import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.entity.Subject;
 import com.edu.capstone.exception.EntityNotFoundException;
@@ -23,12 +25,19 @@ public class SubjectService {
 
 	@Autowired
 	private SubjectRepository subjectRepository;
+	@Autowired
+	private AccountService accountService;
 	
 	public int create(CreateSubjectRequest request) {
+		Set<Account> teachers = new HashSet<>();
+		for (String teacherId : request.getTeacherIds()) {
+			Account teacher = accountService.findById(teacherId);
+			teachers.add(teacher);
+		}
 		Subject subject = Subject.builder()
 				.name(request.getName())
 				.subjectCode(request.getSubjectCode())
-				.totalSlot(request.getTotalSlot()).build();
+				.teachers(teachers).build();
 		subject = subjectRepository.saveAndFlush(subject);
 		subjectRepository.saveAndFlush(subject);
 		return subject.getId();

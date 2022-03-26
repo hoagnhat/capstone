@@ -58,6 +58,10 @@ public class Subject {
 	@OneToMany(mappedBy = "subject", cascade = { CascadeType.MERGE })
 	private Set<Schedule> schedules = new HashSet<>();
 	
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@ManyToMany(cascade = { CascadeType.MERGE })
+	private Set<Account> teachers = new HashSet<>();
+	
 	public void addSpec(Specialization specialization) {
 		if (specializations == null) {
 			specializations = new HashSet<>();
@@ -72,6 +76,22 @@ public class Subject {
 		}
 		specializations.remove(specialization);
 		specialization.getSubjects().remove(this);
+	}
+	
+	public void addTeacher(Account teacher) {
+		if (teachers == null) {
+			teachers = new HashSet<>();
+		}
+		teachers.add(teacher);
+		teacher.getTeachSubjects().add(this);
+	}
+
+	public void removeTeacher(Account teacher) {
+		if (teachers == null) {
+			teachers = new HashSet<>();
+		}
+		teachers.remove(teacher);
+		teacher.getTeachSubjects().remove(this);
 	}
 	
 }

@@ -25,6 +25,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.edu.capstone.common.constant.RegexConstant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -83,5 +84,25 @@ public class Account {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy = "teacher", cascade = { CascadeType.MERGE })
 	private Set<Schedule> schedules = new HashSet<>();
+	
+	@JsonIgnore
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@ManyToMany(mappedBy = "teachers")
+	private Set<Subject> teachSubjects = new HashSet<>();
+	
+	public void addSubjects(Subject subject) {
+		if (teachSubjects == null) {
+			teachSubjects = new HashSet<>();
+		}
+		teachSubjects.add(subject);
+		subject.getTeachers().add(this);
+	}
 
+	public void removeSubjects(Subject subject) {
+		if (teachSubjects == null) {
+			teachSubjects = new HashSet<>();
+		}
+		teachSubjects.remove(subject);
+		subject.getTeachers().remove(this);
+	}
 }
