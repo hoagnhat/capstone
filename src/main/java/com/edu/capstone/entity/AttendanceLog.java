@@ -42,6 +42,8 @@ public class AttendanceLog {
 	private String status;
 	@Column(name = "slot_id")
 	private int slotId;
+	@Column(name = "description")
+	private String description;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToOne(cascade = { CascadeType.MERGE })

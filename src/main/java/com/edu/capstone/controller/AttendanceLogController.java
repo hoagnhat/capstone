@@ -3,11 +3,13 @@ package com.edu.capstone.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.capstone.request.AttendanceLogRequest;
+import com.edu.capstone.request.UpdateAttendanceLogRequest;
 import com.edu.capstone.service.AttendanceLogService;
 
 /**
@@ -23,7 +25,12 @@ public class AttendanceLogController {
 	
 	@PostMapping(path = "/take", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public void takeAttendance(@RequestBody AttendanceLogRequest request) {
-		logService.takeAttendance(request.getStudentId(), request.getSlotId(), request.getStatus());
+		logService.takeAttendance(request.getStudentId(), request.getSlotId(), request.getStatus(), request.getDescription());
+	}
+	
+	@PutMapping("/update")
+	public void takAttendance(@RequestBody UpdateAttendanceLogRequest request) {
+		logService.updateLog(request.getStudentId(), request.getSlotId(), request.getStatus());
 	}
 
 }

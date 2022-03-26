@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Classs;
+import com.edu.capstone.entity.Profile;
 import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.request.AddCourseForClassRequest;
 import com.edu.capstone.request.AddStudentIntoClassRequest;
 import com.edu.capstone.request.ClassRequest;
 import com.edu.capstone.response.ClassResponse;
 import com.edu.capstone.response.ClassSubjectResponse;
+import com.edu.capstone.response.StudentResponse;
 import com.edu.capstone.service.ClassService;
 import com.edu.capstone.service.ProfileService;
 
@@ -35,18 +37,54 @@ public class ClassController {
 	private ProfileService profileService;
 	
 	@GetMapping
-	public List<Classs> getAll() {
-		return classService.getAll();
+	public List<ClassResponse> getAll() {
+		List<ClassResponse> responses = new ArrayList<>();
+		for (Classs classs : classService.getAll()) {
+			List<ClassSubjectResponse> classSubjectResponses = new ArrayList<>();
+			List<StudentResponse> students = new ArrayList<>();
+			List<ClassSubject> subjects = csRepo.findByKeyClassId(classs.getId());
+			for (Account student : classs.getStudents()) {
+				Profile profile = profileService.findByAccountId(student.getId());
+				StudentResponse studentResponse = StudentResponse.builder()
+						.accountId(student.getId())
+						.name(profile.getName())
+						.avatar(profile.getAvatar())
+						.build();
+				students.add(studentResponse);
+			}
+			for (ClassSubject subject : subjects) {
+				ClassSubjectResponse classSubjectResponse = ClassSubjectResponse.builder()
+						.subjectCode(subject.getSubject().getSubjectCode())
+						.teacherName(profileService.findByAccountId(subject.getTeacher().getId()).getName())
+						.build();
+				classSubjectResponses.add(classSubjectResponse);
+			}
+			ClassResponse response = ClassResponse.builder()
+					.classId(classs.getId())
+					.subjects(classSubjectResponses)
+					.semester(classs.getSemester())
+					.specialization(classs.getSpecialization().getName())
+					.students(students)
+					.build();
+			responses.add(response);
+		}
+		return responses;
 	}
 	
 	@GetMapping("/{id}")
 	public ClassResponse getById(@RequestParam("id") String id) {
-		Classs classs = classService.getById(id);
+		Classs classs = classService.findById(id);
 		List<ClassSubjectResponse> classSubjectResponses = new ArrayList<>();
-		List<String> students = new ArrayList<>();
+		List<StudentResponse> students = new ArrayList<>();
 		List<ClassSubject> subjects = csRepo.findByKeyClassId(classs.getId());
 		for (Account student : classs.getStudents()) {
-			students.add(profileService.findByAccountId(id).getName());
+			Profile profile = profileService.findByAccountId(student.getId());
+			StudentResponse studentResponse = StudentResponse.builder()
+					.accountId(student.getId())
+					.name(profile.getName())
+					.avatar(profile.getAvatar())
+					.build();
+			students.add(studentResponse);
 		}
 		for (ClassSubject subject : subjects) {
 			ClassSubjectResponse classSubjectResponse = ClassSubjectResponse.builder()

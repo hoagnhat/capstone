@@ -17,6 +17,6 @@ public class ClassResponse {
 	private List<ClassSubjectResponse> subjects;
 	private int semester;
 	private String specialization;
-	private List<String> students;
+	private List<StudentResponse> students;
 	
 }

@@ -43,9 +43,6 @@ public class AccountController {
 		}
 		AccountResponse response = AccountResponse.builder()
 				.accountId(account.getId())
-				.email(account.getEmail())
-				.isActived(account.getIsActived())
-				.specialization(account.getSpecialization().getName())
 				.roles(roles)
 				.classs(classs)
 				.subjects(subjects)

@@ -82,5 +82,10 @@ public class ScheduleController {
 	public void importSchedule(@RequestParam("schedules") List<ImportScheduleRequest> request) {
 		scheduleService.importSchedule(request);
 	}
+	
+	@GetMapping("/byaccountid")
+	public List<Schedule> getScheduleByAccountId(@RequestParam("accountId") String accountId) {
+		return scheduleService.getByAccountId(accountId);
+	}
 
 }

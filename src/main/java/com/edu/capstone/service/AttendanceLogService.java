@@ -44,10 +44,10 @@ public class AttendanceLogService {
 		logRepository.deleteBySlotId(slotId);
 	}
 
-	public void takeAttendance(String studentId, int slotId, String status) {
+	public void takeAttendance(String studentId, int slotId, String status, String description) {
 		AttendanceLog log = logRepository.findBySlotIdAndStudentId(slotId, studentId);
 		if (log == null) {
-			log = AttendanceLog.builder().studentId(studentId).slotId(slotId).status(status).build();
+			log = AttendanceLog.builder().studentId(studentId).slotId(slotId).status(status).description(description).build();
 		} else {
 			log.setStatus(status);
 		}
@@ -56,6 +56,16 @@ public class AttendanceLogService {
 	
 	public AttendanceLog getBySlotIdAndStudentId(String studentId, int slotId) {
 		return logRepository.findBySlotIdAndStudentId(slotId, studentId);
+	}
+	
+	public void updateLog(String studentId, int slotId, String status) {
+		AttendanceLog log = logRepository.findBySlotIdAndStudentId(slotId, studentId);
+		if (log == null) {
+			log = AttendanceLog.builder().studentId(studentId).slotId(slotId).status(status).build();
+		} else {
+			log.setStatus(status);
+		}
+		logRepository.saveAndFlush(log);
 	}
 	
 }

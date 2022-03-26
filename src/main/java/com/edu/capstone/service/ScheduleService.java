@@ -1,14 +1,13 @@
 package com.edu.capstone.service;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.edu.capstone.common.constant.AppConstant;
 import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.AttendanceLog;
+import com.edu.capstone.entity.Classs;
 import com.edu.capstone.entity.Role;
 import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.exception.EntityNotFoundException;
@@ -141,6 +141,25 @@ public class ScheduleService {
 	    return java.util.Date
 	      .from(dateToConvert.atZone(ZoneId.systemDefault())
 	      .toInstant());
+	}
+	
+	public List<Schedule> getByAccountId(String accountId) {
+		List<Schedule> schedules = new ArrayList<>();
+		Account account = accountService.findById(accountId);
+		if (account.getRoles().contains(Role.builder().roleName(AppConstant.ROLE_STUDENT).build())) {
+			List<Classs> classs = classService.getAll();
+			for (Classs scl : classs) {
+				Set<Account> students = scl.getStudents();
+				for (Account acc : students) {
+					if (acc.getId().equals(accountId)) {
+						schedules.addAll(scl.getSchedules());
+					}
+				}
+			}
+		} else if (account.getRoles().contains(Role.builder().roleName(AppConstant.ROLE_STUDENT).build())) {
+			schedules.addAll(scheduleRepository.findByTeacherId(accountId));
+		}
+		return schedules;
 	}
 
 }
