@@ -1,7 +1,5 @@
 package com.edu.capstone.request;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubjectRequest {
+public class CreateSubjectRequest {
 
 	private String name;
 	private String subjectCode;
 	private int totalSlot;
-	private List<Integer> specializations;
 	
 }

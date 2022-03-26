@@ -12,6 +12,7 @@ import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.entity.Subject;
 import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.SubjectRepository;
+import com.edu.capstone.request.CreateSubjectRequest;
 import com.edu.capstone.request.SubjectRequest;
 
 /**
@@ -23,12 +24,12 @@ public class SubjectService {
 	@Autowired
 	private SubjectRepository subjectRepository;
 	
-	public int create(SubjectRequest request, Set<Specialization> specializations) {
-		Subject subject = Subject.builder().semester(request.getSemester()).build();
+	public int create(CreateSubjectRequest request) {
+		Subject subject = Subject.builder()
+				.name(request.getName())
+				.subjectCode(request.getSubjectCode())
+				.totalSlot(request.getTotalSlot()).build();
 		subject = subjectRepository.saveAndFlush(subject);
-		for (Specialization spec : specializations) {
-			subject.addSpec(spec);
-		}
 		subjectRepository.saveAndFlush(subject);
 		return subject.getId();
 	}
@@ -48,7 +49,6 @@ public class SubjectService {
 	public void update(int subjectId, SubjectRequest request, Set<Specialization> specializations) {
 		Subject subject = findById(subjectId);
 		subject.setName(request.getName());
-		subject.setSemester(request.getSemester());
 		subject.setSubjectCode(request.getSubjectCode());
 		subject.setSpecializations(specializations);
 		subjectRepository.saveAndFlush(subject);
