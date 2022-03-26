@@ -1,5 +1,7 @@
 package com.edu.capstone.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +31,10 @@ public class AttendanceLogController {
 	}
 	
 	@PutMapping("/update")
-	public void takAttendance(@RequestBody UpdateAttendanceLogRequest request) {
-		logService.updateLog(request.getStudentId(), request.getSlotId(), request.getStatus());
+	public void takAttendance(@RequestBody List<UpdateAttendanceLogRequest> requests) {
+		for (UpdateAttendanceLogRequest request : requests) {
+			logService.updateLog(request.getStudentId(), request.getSlotId(), request.getStatus());
+		}
 	}
 
 }
