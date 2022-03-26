@@ -68,7 +68,7 @@ public class SubjectController {
 		subjectService.update(subjectId, request, specializations);
 	}
 	
-	@DeleteMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@DeleteMapping
 	public void delete(@RequestParam("subjectId") int subjectId) {
 		subjectService.delete(subjectId);
 	}
