@@ -9,6 +9,6 @@ import com.edu.capstone.entity.key.CSKey;
 
 public interface ClassSubjectRepository extends JpaRepository<ClassSubject, CSKey> {
 
-	List<ClassSubject> findByKeyClassId(String classId);
+	List<ClassSubject> findByKeyClasssId(String classId);
 	
 }

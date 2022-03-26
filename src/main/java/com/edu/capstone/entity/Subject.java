@@ -46,8 +46,6 @@ public class Subject {
 	private String subjectCode;
 	@Column(name = "semester")
 	private int semester;
-	@Column(name = "total_slot")
-	private int totalSlot;
 
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToMany(cascade = { CascadeType.MERGE })

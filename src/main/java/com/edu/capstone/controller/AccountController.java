@@ -36,7 +36,7 @@ public class AccountController {
 		}
 		for (Classs sclass : account.getClasses()) {
 			classs.add(sclass.getId());
-			List<ClassSubject> csubjectss = csRepo.findByKeyClassId(sclass.getId());
+			List<ClassSubject> csubjectss = csRepo.findByKeyClasssId(sclass.getId());
 			for (ClassSubject subject : csubjectss) {
 				subjects.add(subject.getSubject().getSubjectCode());
 			}

@@ -17,6 +17,8 @@ public class AccountResponse {
 	private String name;
 	private String avatar;
 	private int gender;
+	private int age;
+	private String email;
 	private String phone;
 	private String address;
 	private String personalEmail;

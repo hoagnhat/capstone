@@ -104,7 +104,7 @@ public class ClassService {
 	public void addCourse(AddCourseForClassRequest request) {
 		Account teacher = accountService.findById(request.getTeacherId());
 		Subject subject = subjectService.findById(request.getSubjectId());
-		CSKey key = CSKey.builder().classId(request.getClassId()).subjectId(request.getSubjectId()).build();
+		CSKey key = CSKey.builder().classsId(request.getClassId()).subjectId(request.getSubjectId()).build();
 		ClassSubject cs = ClassSubject.builder()
 				.key(key)
 				.teacher(teacher)

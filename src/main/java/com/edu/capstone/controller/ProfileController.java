@@ -46,7 +46,7 @@ public class ProfileController {
 		}
 		for (Classs sclass : account.getClasses()) {
 			classs.add(sclass.getId());
-			List<ClassSubject> csubjectss = csRepo.findByKeyClassId(sclass.getId());
+			List<ClassSubject> csubjectss = csRepo.findByKeyClasssId(sclass.getId());
 			for (ClassSubject subject : csubjectss) {
 				subjects.add(subject.getSubject().getSubjectCode());
 			}
@@ -56,6 +56,8 @@ public class ProfileController {
 				.name(profile.getName())
 				.avatar(profile.getAvatar())
 				.gender(profile.getGender())
+				.age(profile.getAge())
+				.email(account.getEmail())
 				.phone(profile.getPhone())
 				.address(profile.getAddress())
 				.personalEmail(profile.getPersonalEmail())

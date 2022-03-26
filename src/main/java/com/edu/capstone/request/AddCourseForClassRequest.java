@@ -16,7 +16,5 @@ public class AddCourseForClassRequest {
 	private int subjectId;
 	private String classId;
 	private String teacherId;
-	private Date startDate;
-	private Date endDate;
 
 }

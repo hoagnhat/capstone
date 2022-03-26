@@ -21,8 +21,8 @@ public class CSKey implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@Column(name = "class_id")
-	private String classId;
+	@Column(name = "classs_id")
+	private String classsId;
 	@Column(name = "subject_id")
 	private int subjectId;
 	
