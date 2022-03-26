@@ -113,9 +113,9 @@ public class ScheduleService {
 	
 	public void importSchedule(List<ImportScheduleRequest> request) {
 		for (ImportScheduleRequest schedule : request) {
-			LocalDateTime timeStart = convertToLocalDateTimeViaInstant(schedule.getTimeStart());
-			LocalDateTime timeEnd = convertToLocalDateTimeViaInstant(schedule.getTimeEnd());
 			for (int i = 0; i < 10; i++) {
+				LocalDateTime timeStart = convertToLocalDateTimeViaInstant(schedule.getTimeStart());
+				LocalDateTime timeEnd = convertToLocalDateTimeViaInstant(schedule.getTimeEnd());
 				timeStart.plusDays((long) i * 7);
 				timeEnd.plusDays((long) i * 7);
 				Schedule s = Schedule.builder()
