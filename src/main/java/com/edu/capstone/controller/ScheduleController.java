@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.entity.key.CSKey;
@@ -41,18 +42,28 @@ public class ScheduleController {
 	private ClassSubjectRepository csRepo;
 	
 	@GetMapping("/ongoing")
-	public List<ScheduleResponse> getOnGoingSchedule() {
+	public List<ScheResponse> getOnGoingSchedule() {
+		Account current = accountService.getCurrentAccount();
 		List<Schedule> schedules = scheduleService.getGoingOnSchedule();
-		List<ScheduleResponse> responses = new ArrayList<>();
+		List<ScheResponse> responses = new ArrayList<>();
 		for (Schedule schedule : schedules) {
-			ScheduleResponse response = ScheduleResponse.builder()
+			ClassSubject classSubject = csRepo.findById(CSKey.builder().classsId(schedule.getClasss().getId()).subjectId(schedule.getSubject().getId()).build()).get();
+			ScheSubResponse subRes = ScheSubResponse.builder()
+					.id(schedule.getSubject().getId())
+					.name(schedule.getSubject().getName())
+					.code(schedule.getSubject().getSubjectCode())
+					.startDate(classSubject.getDateStart())
+					.endDate(classSubject.getDateEnd())
+					.build();
+			ScheResponse response = ScheResponse.builder()
 					.id(schedule.getId())
 					.timeStart(schedule.getTimeStart())
 					.timeEnd(schedule.getTimeEnd())
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
-					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
-					.subjectId(schedule.getSubject().getSubjectCode())
+					.teacherName(profileService.findByAccountId(current.getId()).getName())
+					.status(schedule.getStatus())
+					.subject(subRes)
 					.build();
 			responses.add(response);
 		}
@@ -60,18 +71,28 @@ public class ScheduleController {
 	}
 	
 	@GetMapping("/upcoming")
-	public List<ScheduleResponse> getUpcomingSchedule() {
+	public List<ScheResponse> getUpcomingSchedule() {
+		Account current = accountService.getCurrentAccount();
 		List<Schedule> schedules = scheduleService.getUpcomingSchedule();
-		List<ScheduleResponse> responses = new ArrayList<>();
+		List<ScheResponse> responses = new ArrayList<>();
 		for (Schedule schedule : schedules) {
-			ScheduleResponse response = ScheduleResponse.builder()
+			ClassSubject classSubject = csRepo.findById(CSKey.builder().classsId(schedule.getClasss().getId()).subjectId(schedule.getSubject().getId()).build()).get();
+			ScheSubResponse subRes = ScheSubResponse.builder()
+					.id(schedule.getSubject().getId())
+					.name(schedule.getSubject().getName())
+					.code(schedule.getSubject().getSubjectCode())
+					.startDate(classSubject.getDateStart())
+					.endDate(classSubject.getDateEnd())
+					.build();
+			ScheResponse response = ScheResponse.builder()
 					.id(schedule.getId())
 					.timeStart(schedule.getTimeStart())
 					.timeEnd(schedule.getTimeEnd())
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
-					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
-					.subjectId(schedule.getSubject().getSubjectCode())
+					.teacherName(profileService.findByAccountId(current.getId()).getName())
+					.status(schedule.getStatus())
+					.subject(subRes)
 					.build();
 			responses.add(response);
 		}
