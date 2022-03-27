@@ -114,6 +114,7 @@ public class ScheduleController {
 					.classId(schedule.getClasss().getId())
 					.teacherName(profileService.findByAccountId(accountId).getName())
 					.status(schedule.getStatus())
+					.subject(subRes)
 					.build();
 			responses.add(response);
 		}
@@ -141,6 +142,7 @@ public class ScheduleController {
 					.classId(schedule.getClasss().getId())
 					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
 					.status(schedule.getStatus())
+					.subject(subRes)
 					.build();
 			responses.add(response);
 		}
