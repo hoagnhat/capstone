@@ -120,8 +120,29 @@ public class ScheduleController {
 	}
 	
 	@GetMapping("/byclassid")
-	public List<Schedule> getScheduleByClassId(@RequestParam("classId") String classId) {
-		return scheduleService.getByClassId(classId);
+	public List<ScheResponse> getScheduleByClassId(@RequestParam("classId") String classId) {
+		List<Schedule> list = scheduleService.getByClassId(classId);
+		List<ScheResponse> responses = new ArrayList<>();
+		for (Schedule schedule : list) {
+			ClassSubject classSubject = csRepo.findById(CSKey.builder().classsId(schedule.getClasss().getId()).subjectId(schedule.getSubject().getId()).build()).get();
+			ScheSubResponse subRes = ScheSubResponse.builder()
+					.id(schedule.getSubject().getId())
+					.name(schedule.getSubject().getName())
+					.code(schedule.getSubject().getSubjectCode())
+					.startDate(classSubject.getDateStart())
+					.endDate(classSubject.getDateEnd())
+					.build();
+			ScheResponse response = ScheResponse.builder()
+					.id(schedule.getId())
+					.timeStart(schedule.getTimeStart())
+					.timeEnd(schedule.getTimeEnd())
+					.room(schedule.getRoom())
+					.classId(schedule.getClasss().getId())
+					.teacherName(accountId)
+					.status(schedule.getStatus())
+					.build();
+		}
+		return responses;
 	}
 
 }
