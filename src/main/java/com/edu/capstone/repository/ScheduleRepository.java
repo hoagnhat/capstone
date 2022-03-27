@@ -1,6 +1,6 @@
 package com.edu.capstone.repository;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,8 +15,8 @@ import com.edu.capstone.entity.Schedule;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 	
-	List<Schedule> findByTimeEndBetween(LocalDateTime startTime, LocalDateTime endTime);
-	List<Schedule> findByTimeStartAfter(LocalDateTime startTime);
+	List<Schedule> findByTimeEndBetween(Date startTime, Date endTime);
+	List<Schedule> findByTimeStartAfter(Date startTime);
 	List<Schedule> findByTeacherId(String teacherId);
 	List<Schedule> findByClasssId(String classId);
 

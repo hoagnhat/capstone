@@ -65,9 +65,9 @@ public class ScheduleService {
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		String nowStr = now.format(formatter1);
-		LocalDateTime nowEnd = LocalDateTime.parse(nowStr + " 23:59:59");
+		LocalDateTime nowEnd = LocalDateTime.parse(nowStr + "T23:59:59");
 		Account current = accountService.getCurrentAccount();
-		List<Schedule> schedules = scheduleRepository.findByTimeEndBetween(now, nowEnd);
+		List<Schedule> schedules = scheduleRepository.findByTimeEndBetween(convertToDateViaInstant(now), convertToDateViaInstant(nowEnd));
 		List<Schedule> result = new ArrayList<>();
 		for (Role role : current.getRoles()) {
 			if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
@@ -90,7 +90,7 @@ public class ScheduleService {
 	
 	public List<Schedule> getUpcomingSchedule() {
 		Account current = accountService.getCurrentAccount();
-		List<Schedule> schedules = scheduleRepository.findByTimeStartAfter(LocalDateTime.now());
+		List<Schedule> schedules = scheduleRepository.findByTimeStartAfter(new Date());
 		List<Schedule> result = new ArrayList<>();
 		for (Role role : current.getRoles()) {
 			if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
