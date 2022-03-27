@@ -52,9 +52,13 @@ public class ScheduleController {
 					.id(schedule.getSubject().getId())
 					.name(schedule.getSubject().getName())
 					.code(schedule.getSubject().getSubjectCode())
-					.startDate(classSubject.getDateStart())
-					.endDate(classSubject.getDateEnd())
 					.build();
+			if (classSubject.getDateStart() != null) {
+				subRes.setStartDate(classSubject.getDateStart());
+			}
+			if (classSubject.getDateEnd() != null) {
+				subRes.setEndDate(classSubject.getDateEnd());
+			}
 			ScheResponse response = ScheResponse.builder()
 					.id(schedule.getId())
 					.timeStart(schedule.getTimeStart())
@@ -76,14 +80,18 @@ public class ScheduleController {
 		List<Schedule> schedules = scheduleService.getUpcomingSchedule();
 		List<ScheResponse> responses = new ArrayList<>();
 		for (Schedule schedule : schedules) {
-			ClassSubject classSubject = csRepo.findById(CSKey.builder().classsId(schedule.getClasss().getId()).subjectId(schedule.getSubject().getId()).build()).get();
+			ClassSubject classSubject = csRepo.findByKeyClasssIdAndKeySubjectId(schedule.getClasss().getId(), schedule.getSubject().getId());
 			ScheSubResponse subRes = ScheSubResponse.builder()
 					.id(schedule.getSubject().getId())
 					.name(schedule.getSubject().getName())
 					.code(schedule.getSubject().getSubjectCode())
-					.startDate(classSubject.getDateStart())
-					.endDate(classSubject.getDateEnd())
 					.build();
+			if (classSubject.getDateStart() != null) {
+				subRes.setStartDate(classSubject.getDateStart());
+			}
+			if (classSubject.getDateEnd() != null) {
+				subRes.setEndDate(classSubject.getDateEnd());
+			}
 			ScheResponse response = ScheResponse.builder()
 					.id(schedule.getId())
 					.timeStart(schedule.getTimeStart())

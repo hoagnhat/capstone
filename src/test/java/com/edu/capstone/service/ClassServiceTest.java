@@ -212,6 +212,34 @@ public class ClassServiceTest {
 				}
 			}
 		}
+		
+		
+		List<ScheResponse> responses = new ArrayList<>();
+		for (Schedule schedule : result) {
+			ClassSubject classSubject = csRepo.findByKeyClasssIdAndKeySubjectId(schedule.getClasss().getId(), schedule.getSubject().getId());
+			ScheSubResponse subRes = ScheSubResponse.builder()
+					.id(schedule.getSubject().getId())
+					.name(schedule.getSubject().getName())
+					.code(schedule.getSubject().getSubjectCode())
+					.build();
+			if (classSubject.getDateStart() != null) {
+				subRes.setStartDate(classSubject.getDateStart());
+			}
+			if (classSubject.getDateEnd() != null) {
+				subRes.setEndDate(classSubject.getDateEnd());
+			}
+			ScheResponse response = ScheResponse.builder()
+					.id(schedule.getId())
+					.timeStart(schedule.getTimeStart())
+					.timeEnd(schedule.getTimeEnd())
+					.room(schedule.getRoom())
+					.classId(schedule.getClasss().getId())
+					.teacherName(profileService.findByAccountId("LE00002").getName())
+					.status(schedule.getStatus())
+					.subject(subRes)
+					.build();
+			responses.add(response);
+		}
 		String a = "a";
 	}
 	
