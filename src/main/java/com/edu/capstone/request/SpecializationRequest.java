@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SpecializationRequest {
 
+	private int specId;
 	private String name;
 	private List<Integer> subjectId;
 	

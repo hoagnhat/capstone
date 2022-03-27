@@ -66,8 +66,11 @@ public class SpecializationService {
 		// TODO: Check validate of name
 		Specialization specialization = Specialization.builder()
 				.name(request.getName())
-				.subjects(subjects)
 				.build();
+		specialization = specializationRepository.saveAndFlush(specialization);
+		for (Subject subject : subjects) {
+			specialization.addSubjects(subject);
+		}
 		specializationRepository.saveAndFlush(specialization);
 	}
 	
@@ -76,14 +79,17 @@ public class SpecializationService {
 	 * 
 	 * @version 1.0 - Initiation (Feb 1, 2022 by <b>NhatHH</b>)
 	 */
-	public void update(int id, SpecializationRequest request, Set<Subject> subjects) {
+	public void update(SpecializationRequest request, Set<Subject> subjects) {
 		// TODO: Need validate name
-		Specialization specialization = findById(id);
+		Specialization specialization = findById(request.getSpecId());
 		if (specialization == null) {
 			throw new EntityNotFoundException(ExceptionConstant.SPECIALIZATION_NOT_FOUND);
 		}
 		specialization.setName(request.getName());
-		specialization.setSubjects(subjects);
+		specialization.setSubjects(null);
+		for (Subject subject : subjects) {
+			specialization.addSubjects(subject);
+		}
 		specializationRepository.saveAndFlush(specialization);
 	}
 	

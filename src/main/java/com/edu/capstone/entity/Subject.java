@@ -23,6 +23,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author NhatHH Date: Feb 13, 2022
@@ -33,7 +34,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"schedules", "specializations"})
+@EqualsAndHashCode(exclude = {"schedules", "specializations", "teachers"})
 public class Subject {
 
 	@Id
@@ -47,15 +48,18 @@ public class Subject {
 	@Column(name = "semester")
 	private int semester;
 
+	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToMany(cascade = { CascadeType.MERGE })
+	@ManyToMany(cascade = { CascadeType.PERSIST })
 	private Set<Specialization> specializations = new HashSet<>();
 
 	@JsonIgnore
+	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy = "subject", cascade = { CascadeType.MERGE })
 	private Set<Schedule> schedules = new HashSet<>();
 	
+	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToMany(cascade = { CascadeType.MERGE })
 	private Set<Account> teachers = new HashSet<>();

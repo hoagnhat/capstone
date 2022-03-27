@@ -49,12 +49,12 @@ public class SpecializationController {
 	}
 
 	@PutMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public void update(@RequestParam("specId") int specId, @RequestBody SpecializationRequest request) {
+	public void update(@RequestBody SpecializationRequest request) {
 		Set<Subject> subjects = new HashSet<>();
 		for (Integer subjectId : request.getSubjectId()) {
 			subjects.add(subjectService.findById(subjectId));
 		}
-		specService.update(specId, request, subjects);
+		specService.update(request, subjects);
 	}
 
 }
