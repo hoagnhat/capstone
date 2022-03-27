@@ -112,9 +112,10 @@ public class ScheduleController {
 					.timeEnd(schedule.getTimeEnd())
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
-					.teacherName(accountId)
+					.teacherName(profileService.findByAccountId(accountId).getName())
 					.status(schedule.getStatus())
 					.build();
+			responses.add(response);
 		}
 		return responses;
 	}
@@ -138,9 +139,10 @@ public class ScheduleController {
 					.timeEnd(schedule.getTimeEnd())
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
-					.teacherName(accountId)
+					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
 					.status(schedule.getStatus())
 					.build();
+			responses.add(response);
 		}
 		return responses;
 	}

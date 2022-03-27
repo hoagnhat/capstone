@@ -12,12 +12,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.edu.capstone.entity.ClassSubject;
+import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.entity.Subject;
+import com.edu.capstone.entity.key.CSKey;
+import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.request.AddCourseForClassRequest;
 import com.edu.capstone.request.AddStudentIntoClassRequest;
 import com.edu.capstone.request.ClassRequest;
 import com.edu.capstone.request.CreateSpecRequest;
 import com.edu.capstone.request.SpecializationRequest;
+import com.edu.capstone.response.ScheResponse;
+import com.edu.capstone.response.ScheSubResponse;
 
 @SpringBootTest
 @DisplayName("Class service test")
@@ -31,6 +37,10 @@ public class ClassServiceTest {
 	private SubjectService subjectService;
 	@Autowired
 	private ScheduleService scheduleService;
+	@Autowired
+	private ProfileService profileService;
+	@Autowired
+	private ClassSubjectRepository csRepo;
 	
 	@Test
 	public void createClass() {
@@ -109,7 +119,29 @@ public class ClassServiceTest {
 	@Test
 	public void getSchedule() {
 		String accountId = "LE00002";
-		scheduleService.getByAccountId(accountId);
+		List<Schedule> list = scheduleService.getByAccountId(accountId);
+		List<ScheResponse> responses = new ArrayList<>();
+		for (Schedule schedule : list) {
+			ClassSubject classSubject = csRepo.findById(CSKey.builder().classsId(schedule.getClasss().getId()).subjectId(schedule.getSubject().getId()).build()).get();
+			ScheSubResponse subRes = ScheSubResponse.builder()
+					.id(schedule.getSubject().getId())
+					.name(schedule.getSubject().getName())
+					.code(schedule.getSubject().getSubjectCode())
+					.startDate(classSubject.getDateStart())
+					.endDate(classSubject.getDateEnd())
+					.build();
+			ScheResponse response = ScheResponse.builder()
+					.id(schedule.getId())
+					.timeStart(schedule.getTimeStart())
+					.timeEnd(schedule.getTimeEnd())
+					.room(schedule.getRoom())
+					.classId(schedule.getClasss().getId())
+					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
+					.status(schedule.getStatus())
+					.build();
+			responses.add(response);
+		}
+		String a = "a";
 	}
 
 }
