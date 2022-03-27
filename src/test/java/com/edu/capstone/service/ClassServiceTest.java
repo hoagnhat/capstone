@@ -3,6 +3,7 @@ package com.edu.capstone.service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -164,6 +165,59 @@ public class ClassServiceTest {
 		String nowStr = now.format(formatter1);
 		LocalDateTime nowEnd = LocalDateTime.parse(nowStr + "T23:59:59");
 		List<Schedule> schedules = scheRepo.findByTimeEndBetween(scheduleService.convertToDateViaInstant(now), scheduleService.convertToDateViaInstant(nowEnd));
+		List<Schedule> result = new ArrayList<>();
+		List<Role> roles = new ArrayList<>();
+		roles.add(Role.builder().roleName(AppConstant.ROLE_TEACHER).build());
+//		for (Role role : roles) {
+//			if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
+//				for (Schedule schedule : schedules) {
+//					AttendanceLog log = logService.getBySlotIdAndStudentId("LE00002", schedule.getId());
+//					if (log != null) {
+//						result.add(schedule);
+//					}
+//				}
+//			} else if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
+//				for (Schedule schedule : schedules) {
+//					if (schedule.getTeacher().getId().equals("LE00002")) {
+//						result.add(schedule);
+//					}
+//				}
+//			}
+//		}
+		
+//		LocalDateTime now = LocalDateTime.now();
+//		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//		String nowStr = now.format(formatter1);
+//		LocalDateTime nowEnd = LocalDateTime.parse(nowStr + "T23:59:59");
+//		List<Schedule> schedules = scheduleRepository.findByTimeEndBetween(convertToDateViaInstant(now), convertToDateViaInstant(nowEnd));
+//		Account current = accountService.getCurrentAccount();
+//		List<Schedule> result = new ArrayList<>();
+		for (Role role : roles) {
+			if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
+				for (Schedule schedule : schedules) {
+					if (schedule.getTimeStart().before(scheduleService.convertToDateViaInstant(LocalDateTime.now())) && schedule.getTimeEnd().after(scheduleService.convertToDateViaInstant(LocalDateTime.now()))) {
+						AttendanceLog log = logService.getBySlotIdAndStudentId("LE00002", schedule.getId());
+						if (log != null) {
+							result.add(schedule);
+						}
+					}
+				}
+			} else if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
+				for (Schedule schedule : schedules) {
+					if (schedule.getTeacher().getId().equals("LE00002")) {
+						if (schedule.getTimeStart().before(scheduleService.convertToDateViaInstant(LocalDateTime.now())) && schedule.getTimeEnd().after(scheduleService.convertToDateViaInstant(LocalDateTime.now()))) {
+							result.add(schedule);
+						}
+					}
+				}
+			}
+		}
+		String a = "a";
+	}
+	
+	@Test
+	public void testUpcoming() {
+		List<Schedule> schedules = scheRepo.findByTimeStartAfter(new Date());
 		List<Schedule> result = new ArrayList<>();
 		List<Role> roles = new ArrayList<>();
 		roles.add(Role.builder().roleName(AppConstant.ROLE_TEACHER).build());

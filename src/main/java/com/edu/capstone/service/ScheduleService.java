@@ -66,21 +66,25 @@ public class ScheduleService {
 		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		String nowStr = now.format(formatter1);
 		LocalDateTime nowEnd = LocalDateTime.parse(nowStr + "T23:59:59");
-		Account current = accountService.getCurrentAccount();
 		List<Schedule> schedules = scheduleRepository.findByTimeEndBetween(convertToDateViaInstant(now), convertToDateViaInstant(nowEnd));
+		Account current = accountService.getCurrentAccount();
 		List<Schedule> result = new ArrayList<>();
 		for (Role role : current.getRoles()) {
 			if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
 				for (Schedule schedule : schedules) {
-					AttendanceLog log = logService.getBySlotIdAndStudentId(current.getId(), schedule.getId());
-					if (log != null) {
-						result.add(schedule);
+					if (schedule.getTimeStart().before(convertToDateViaInstant(LocalDateTime.now())) && schedule.getTimeEnd().after(convertToDateViaInstant(LocalDateTime.now()))) {
+						AttendanceLog log = logService.getBySlotIdAndStudentId(current.getId(), schedule.getId());
+						if (log != null) {
+							result.add(schedule);
+						}
 					}
 				}
 			} else if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
 				for (Schedule schedule : schedules) {
 					if (schedule.getTeacher().getId().equals(current.getId())) {
-						result.add(schedule);
+						if (schedule.getTimeStart().before(convertToDateViaInstant(LocalDateTime.now())) && schedule.getTimeEnd().after(convertToDateViaInstant(LocalDateTime.now()))) {
+							result.add(schedule);
+						}
 					}
 				}
 			}
