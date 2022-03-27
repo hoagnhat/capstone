@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.entity.Subject;
+import com.edu.capstone.request.CreateSpecRequest;
 import com.edu.capstone.request.SpecializationRequest;
 import com.edu.capstone.response.SpecResponse;
 import com.edu.capstone.service.SpecializationService;
@@ -52,8 +53,8 @@ public class SpecializationController {
 		return response;
 	}
 
-	@PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public void create(@RequestBody SpecializationRequest request) {
+	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public void create(@RequestBody CreateSpecRequest request) {
 		Set<Subject> subjects = new HashSet<>();
 		for (Integer subjectId : request.getSubjectId()) {
 			subjects.add(subjectService.findById(subjectId));

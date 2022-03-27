@@ -16,6 +16,7 @@ import com.edu.capstone.entity.Subject;
 import com.edu.capstone.request.AddCourseForClassRequest;
 import com.edu.capstone.request.AddStudentIntoClassRequest;
 import com.edu.capstone.request.ClassRequest;
+import com.edu.capstone.request.CreateSpecRequest;
 import com.edu.capstone.request.SpecializationRequest;
 
 @SpringBootTest
@@ -28,6 +29,8 @@ public class ClassServiceTest {
 	private SpecializationService specService;
 	@Autowired
 	private SubjectService subjectService;
+	@Autowired
+	private AccountService accountService;
 	
 	@Test
 	public void createClass() {
@@ -53,11 +56,12 @@ public class ClassServiceTest {
 	
 	@Test
 	public void createSpec() {
+		List<Subject> sss = subjectService.getAll();
 		List<Integer> s = new ArrayList<>();
 		s.add(1);
 		s.add(2);
-		SpecializationRequest request = SpecializationRequest.builder()
-				.name("HELLO WORLD 5")
+		CreateSpecRequest request = CreateSpecRequest.builder()
+				.name("HELLO WORLD adssdaf 7")
 				.subjectId(s)
 				.build();
 		Set<Subject> subjects = new HashSet<>();

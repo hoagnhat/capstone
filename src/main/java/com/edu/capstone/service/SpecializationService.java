@@ -1,7 +1,6 @@
 package com.edu.capstone.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -17,6 +16,7 @@ import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.entity.Subject;
 import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.SpecializationRepository;
+import com.edu.capstone.request.CreateSpecRequest;
 import com.edu.capstone.request.SpecializationRequest;
 
 /**
@@ -69,7 +69,7 @@ public class SpecializationService {
 	 * 
 	 * @version 1.0 - Initiation (Jan 31, 2022 by <b>NhatHH</b>)
 	 */
-	public void create(SpecializationRequest request, Set<Subject> subjects) {
+	public void create(CreateSpecRequest request, Set<Subject> subjects) {
 		// TODO: Check validate of name
 		Specialization specialization = Specialization.builder()
 				.name(request.getName())
