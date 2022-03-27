@@ -15,6 +15,6 @@ public class SubjectRequest {
 
 	private String name;
 	private String subjectCode;
-	private List<Integer> specializations;
+	private List<String> teacherIds;
 	
 }

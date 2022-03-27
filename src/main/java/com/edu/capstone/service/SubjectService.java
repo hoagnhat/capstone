@@ -61,11 +61,16 @@ public class SubjectService {
 		return subjectRepository.findAll();
 	}
 	
-	public void update(int subjectId, SubjectRequest request, Set<Specialization> specializations) {
+	public void update(int subjectId, SubjectRequest request) {
+		Set<Account> teachers = new HashSet<>();
+		for (String teacherId : request.getTeacherIds()) {
+			Account teacher = accountRepository.findById(teacherId).get();
+			teachers.add(teacher);
+		}
 		Subject subject = findById(subjectId);
 		subject.setName(request.getName());
 		subject.setSubjectCode(request.getSubjectCode());
-		subject.setSpecializations(specializations);
+		subject.setTeachers(teachers);
 		subjectRepository.saveAndFlush(subject);
 	}
 	
