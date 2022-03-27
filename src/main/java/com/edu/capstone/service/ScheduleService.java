@@ -3,6 +3,7 @@ package com.edu.capstone.service;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,10 +63,10 @@ public class ScheduleService {
 	}
 	
 	public List<Schedule> getGoingOnSchedule() {
-		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime now = LocalDateTime.now();		
 		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		String nowStr = now.format(formatter1);
-		LocalDateTime nowEnd = LocalDateTime.parse(nowStr + "T23:59:59");
+		LocalDateTime nowEnd = LocalDateTime.parse(nowStr + "T23:59:59");		
 		List<Schedule> schedules = scheduleRepository.findByTimeEndBetween(convertToDateViaInstant(now), convertToDateViaInstant(nowEnd));
 		Account current = accountService.getCurrentAccount();
 		List<Schedule> result = new ArrayList<>();
