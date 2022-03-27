@@ -145,8 +145,12 @@ public class ScheduleService {
 	
 	public List<Schedule> getByAccountId(String accountId) {
 		List<Schedule> schedules = new ArrayList<>();
+		List<String> roles = new ArrayList<>();
 		Account account = accountService.findById(accountId);
-		if (account.getRoles().contains(Role.builder().roleName(AppConstant.ROLE_STUDENT).build())) {
+		for (Role role : account.getRoles()) {
+			roles.add(role.getRoleName());
+		}
+		if (roles.indexOf(AppConstant.ROLE_STUDENT) != -1) {
 			List<Classs> classs = classService.getAll();
 			for (Classs scl : classs) {
 				Set<Account> students = scl.getStudents();
@@ -156,7 +160,7 @@ public class ScheduleService {
 					}
 				}
 			}
-		} else if (account.getRoles().contains(Role.builder().roleName(AppConstant.ROLE_STUDENT).build())) {
+		} else if (roles.indexOf(AppConstant.ROLE_TEACHER) != -1) {
 			schedules.addAll(scheduleRepository.findByTeacherId(accountId));
 		}
 		return schedules;

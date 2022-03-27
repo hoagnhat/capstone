@@ -30,7 +30,7 @@ public class ClassServiceTest {
 	@Autowired
 	private SubjectService subjectService;
 	@Autowired
-	private AccountService accountService;
+	private ScheduleService scheduleService;
 	
 	@Test
 	public void createClass() {
@@ -104,6 +104,12 @@ public class ClassServiceTest {
 				.studentIds(studentId)
 				.build();
 		classService.addStudent(rq);
+	}
+	
+	@Test
+	public void getSchedule() {
+		String accountId = "LE00002";
+		scheduleService.getByAccountId(accountId);
 	}
 
 }

@@ -14,10 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Schedule;
+import com.edu.capstone.entity.key.CSKey;
+import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.request.CreateScheduleRequest;
 import com.edu.capstone.request.ImportScheduleRequest;
+import com.edu.capstone.response.ScheResponse;
+import com.edu.capstone.response.ScheSubResponse;
 import com.edu.capstone.response.ScheduleResponse;
+import com.edu.capstone.service.AccountService;
 import com.edu.capstone.service.ProfileService;
 import com.edu.capstone.service.ScheduleService;
 
@@ -29,6 +35,10 @@ public class ScheduleController {
 	private ScheduleService scheduleService;
 	@Autowired
 	private ProfileService profileService;
+	@Autowired
+	private AccountService accountService;
+	@Autowired
+	private ClassSubjectRepository csRepo;
 	
 	@GetMapping("/ongoing")
 	public List<ScheduleResponse> getOnGoingSchedule() {
@@ -84,8 +94,29 @@ public class ScheduleController {
 	}
 	
 	@GetMapping("/byaccountid")
-	public List<Schedule> getScheduleByAccountId(@RequestParam("accountId") String accountId) {
-		return scheduleService.getByAccountId(accountId);
+	public List<ScheResponse> getScheduleByAccountId(@RequestParam("accountId") String accountId) {
+		List<Schedule> list = scheduleService.getByAccountId(accountId);
+		List<ScheResponse> responses = new ArrayList<>();
+		for (Schedule schedule : list) {
+			ClassSubject classSubject = csRepo.findById(CSKey.builder().classsId(schedule.getClasss().getId()).subjectId(schedule.getSubject().getId()).build()).get();
+			ScheSubResponse subRes = ScheSubResponse.builder()
+					.id(schedule.getSubject().getId())
+					.name(schedule.getSubject().getName())
+					.code(schedule.getSubject().getSubjectCode())
+					.startDate(classSubject.getDateStart())
+					.endDate(classSubject.getDateEnd())
+					.build();
+			ScheResponse response = ScheResponse.builder()
+					.id(schedule.getId())
+					.timeStart(schedule.getTimeStart())
+					.timeEnd(schedule.getTimeEnd())
+					.room(schedule.getRoom())
+					.classId(schedule.getClasss().getId())
+					.teacherName(accountId)
+					.status(schedule.getStatus())
+					.build();
+		}
+		return responses;
 	}
 	
 	@GetMapping("/byclassid")

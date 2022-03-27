@@ -18,6 +18,8 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,6 +49,7 @@ public class Schedule {
 	@Column(name = "status")
 	private String status;
 	
+	@JsonIgnore
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "teacher_id", referencedColumnName = "id", insertable = true, updatable = true)
@@ -59,6 +62,7 @@ public class Schedule {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Subject subject;
 	
+	@JsonIgnore
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "class_id", referencedColumnName = "id", insertable = true, updatable = true)
