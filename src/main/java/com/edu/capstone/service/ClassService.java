@@ -63,6 +63,7 @@ public class ClassService {
 			Account student = accountService.findById(studentId);
 			Classs classs = getById(request.getClassId());
 			classs.getStudents().add(student);
+			student.getClasses().add(classs);
 			classRepository.saveAndFlush(classs);
 		}
 	}

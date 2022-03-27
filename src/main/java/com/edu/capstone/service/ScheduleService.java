@@ -165,5 +165,9 @@ public class ScheduleService {
 	public List<Schedule> getByClassId(String classId) {
 		return scheduleRepository.findByClasssId(classId);
 	}
+	
+	public void delete(int id) {
+		scheduleRepository.deleteById(id);
+	}
 
 }

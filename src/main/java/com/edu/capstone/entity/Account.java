@@ -87,7 +87,7 @@ public class Account {
 	
 	@JsonIgnore
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToMany(mappedBy = "teachers")
+	@ManyToMany(mappedBy = "teachers", cascade = {CascadeType.REMOVE})
 	private Set<Subject> teachSubjects = new HashSet<>();
 	
 	public void addSubjects(Subject subject) {

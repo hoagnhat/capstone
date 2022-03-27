@@ -56,6 +56,7 @@ public class ClassServiceTest {
 	public void createSpec() {
 		List<Integer> s = new ArrayList<>();
 		s.add(1);
+		s.add(2);
 		SpecializationRequest request = SpecializationRequest.builder()
 				.name("HELLO WORLD 3")
 				.subjectId(s)
@@ -71,10 +72,8 @@ public class ClassServiceTest {
 	public void updateSpec() {
 		List<Integer> s = new ArrayList<>();
 		s.add(1);
-		s.add(2);
-		s.add(3);
 		SpecializationRequest request = SpecializationRequest.builder()
-				.specId(8)
+				.specId(10)
 				.name("HELLO WORLD 3")
 				.subjectId(s)
 				.build();
@@ -83,6 +82,12 @@ public class ClassServiceTest {
 			subjects.add(subjectService.findById(subjectId));
 		}
 		specService.update(request, subjects);
+	}
+	
+	@Test
+	public void deleteSubject() {
+		int subjectId = 1;
+		subjectService.delete(subjectId);
 	}
 
 }

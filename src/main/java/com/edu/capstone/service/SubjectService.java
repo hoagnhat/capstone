@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.entity.Subject;
 import com.edu.capstone.exception.EntityNotFoundException;
+import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.repository.SubjectRepository;
 import com.edu.capstone.request.CreateSubjectRequest;
 import com.edu.capstone.request.SubjectRequest;
@@ -27,6 +30,8 @@ public class SubjectService {
 	private SubjectRepository subjectRepository;
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private ClassSubjectRepository csRepo;
 	
 	public int create(CreateSubjectRequest request) {
 		Set<Account> teachers = new HashSet<>();
@@ -63,8 +68,15 @@ public class SubjectService {
 		subjectRepository.saveAndFlush(subject);
 	}
 	
+	@Transactional
 	public void delete(int subjectId) {
-		subjectRepository.deleteById(subjectId);
+		Subject subject = findById(subjectId);
+		csRepo.deleteByKeySubjectId(subjectId);
+		subjectRepository.delete(subject);
+	}
+	
+	public void save(Subject subject) {
+		subjectRepository.save(subject);
 	}
 
 }
