@@ -254,7 +254,7 @@ public class AccountService {
 	public void changePassword(ChangePasswordRequest request) {
 		Account current = getCurrentAccount();
 		// Check new password is match with confirm password
-		if (request.getNewPassword().equals(request.getConfirmPassword())) {
+		if (!request.getNewPassword().equals(request.getConfirmPassword())) {
 			throw new RuntimeException(ExceptionConstant.NEW_PASSWORD_NOT_MATCH_CONFIRM_PASSWORD_MSG);
 		}
 		// Check whether old password is not match with the one in database
