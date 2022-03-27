@@ -258,7 +258,7 @@ public class AccountService {
 			throw new RuntimeException(ExceptionConstant.NEW_PASSWORD_NOT_MATCH_CONFIRM_PASSWORD_MSG);
 		}
 		// Check whether old password is not match with the one in database
-		if (!current.getPassword().equals(request.getOldPassword())) {
+		if (!passwordEncoder.matches(request.getOldPassword(), current.getPassword())) {
 			throw new RuntimeException(ExceptionConstant.OLD_PASSWORD_WRONG_MSG); 
 		}
 		current.setPassword(request.getNewPassword());
