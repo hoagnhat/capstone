@@ -1,5 +1,6 @@
 package com.edu.capstone.controller;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.entity.Subject;
 import com.edu.capstone.request.SpecializationRequest;
+import com.edu.capstone.response.SpecResponse;
 import com.edu.capstone.service.SpecializationService;
 import com.edu.capstone.service.SubjectService;
 
@@ -35,8 +37,19 @@ public class SpecializationController {
 	}
 
 	@GetMapping("/{id}")
-	public Specialization getById(@RequestParam("id") int id) {
-		return specService.findById(id);
+	public SpecResponse getById(@RequestParam("id") int id) {
+		Specialization spec = specService.findById(id);
+		Set<Subject> subjects = spec.getSubjects();
+		List<String> subjectsss = new ArrayList<>();
+		for (Subject subject : subjects) {
+			subjectsss.add(subject.getSubjectCode());
+		}
+		SpecResponse response = SpecResponse.builder()
+				.specId(spec.getId())
+				.name(spec.getName())
+				.subjects(subjectsss)
+				.build();
+		return response;
 	}
 
 	@PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
