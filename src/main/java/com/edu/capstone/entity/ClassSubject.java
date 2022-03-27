@@ -39,7 +39,7 @@ public class ClassSubject {
 	private Account teacher;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToOne(cascade = { CascadeType.MERGE })
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
 	@JoinColumn(name = "subject_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Subject subject;
 	

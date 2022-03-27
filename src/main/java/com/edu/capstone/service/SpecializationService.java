@@ -1,5 +1,6 @@
 package com.edu.capstone.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -22,6 +23,8 @@ public class SpecializationService {
 
 	@Autowired
 	private SpecializationRepository specializationRepository;
+	@Autowired
+	private SubjectService subjectService;
 
 	/**
 	 * Tìm chuyên ngành theo id
@@ -86,7 +89,11 @@ public class SpecializationService {
 			throw new EntityNotFoundException(ExceptionConstant.SPECIALIZATION_NOT_FOUND);
 		}
 		specialization.setName(request.getName());
-		specialization.setSubjects(null);
+		for (Subject subject : specialization.getSubjects()) {
+			subject.removeSpec(specialization);
+			subjectService.save(subject);
+		}
+		specialization = specializationRepository.saveAndFlush(specialization);
 		for (Subject subject : subjects) {
 			specialization.addSubjects(subject);
 		}

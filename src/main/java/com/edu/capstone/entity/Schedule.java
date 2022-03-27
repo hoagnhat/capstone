@@ -1,6 +1,7 @@
 package com.edu.capstone.entity;
 
 import java.util.Date;
+import java.util.HashSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -53,7 +54,7 @@ public class Schedule {
 	private Account teacher;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToOne(cascade = { CascadeType.MERGE })
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
 	@JoinColumn(name = "subject_id", referencedColumnName = "id", insertable = true, updatable = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Subject subject;

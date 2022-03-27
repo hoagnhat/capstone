@@ -50,19 +50,35 @@ public class Subject {
 
 	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToMany(cascade = { CascadeType.PERSIST })
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private Set<Specialization> specializations = new HashSet<>();
 
 	@JsonIgnore
 	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy = "subject", cascade = { CascadeType.MERGE })
+	@OneToMany(mappedBy = "subject", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private Set<Schedule> schedules = new HashSet<>();
 	
 	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToMany(cascade = { CascadeType.MERGE })
+	@ManyToMany(cascade = { CascadeType.PERSIST })
 	private Set<Account> teachers = new HashSet<>();
+	
+	public void addSchedule(Schedule schedule) {
+		if (schedules == null) {
+			schedules = new HashSet<>();
+		}
+		schedules.add(schedule);
+		schedule.setSubject(this);
+	}
+
+	public void removeSchedule(Schedule schedule) {
+		if (schedules == null) {
+			schedules = new HashSet<>();
+		}
+		schedules.remove(schedule);
+		schedule.setSubject(null);
+	}
 	
 	public void addSpec(Specialization specialization) {
 		if (specializations == null) {

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.Profile;
+import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.entity.Subject;
 import com.edu.capstone.request.CreateSubjectRequest;
@@ -25,6 +26,7 @@ import com.edu.capstone.request.SubjectRequest;
 import com.edu.capstone.response.StudentResponse;
 import com.edu.capstone.response.SubjectResponse;
 import com.edu.capstone.service.ProfileService;
+import com.edu.capstone.service.ScheduleService;
 import com.edu.capstone.service.SpecializationService;
 import com.edu.capstone.service.SubjectService;
 
@@ -38,6 +40,8 @@ public class SubjectController {
 	private SpecializationService specService;
 	@Autowired
 	private ProfileService profileService;
+	@Autowired
+	private ScheduleService scheduleService;
 	
 	@GetMapping
 	public List<SubjectResponse> getAll() {
@@ -115,6 +119,9 @@ public class SubjectController {
 	
 	@DeleteMapping
 	public void delete(@RequestParam("subjectId") int subjectId) {
+		for (Schedule schedule : subjectService.findById(subjectId).getSchedules()) {
+			scheduleService.delete(schedule.getId());
+		}
 		subjectService.delete(subjectId);
 	}
 
