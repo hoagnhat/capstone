@@ -47,7 +47,7 @@ public class ScheduleController {
 		List<Schedule> schedules = scheduleService.getGoingOnSchedule();
 		List<ScheResponse> responses = new ArrayList<>();
 		for (Schedule schedule : schedules) {
-			ClassSubject classSubject = csRepo.findById(CSKey.builder().classsId(schedule.getClasss().getId()).subjectId(schedule.getSubject().getId()).build()).get();
+			ClassSubject classSubject = csRepo.findByKeyClasssIdAndKeySubjectId(schedule.getClasss().getId(), schedule.getSubject().getId());
 			ScheSubResponse subRes = ScheSubResponse.builder()
 					.id(schedule.getSubject().getId())
 					.name(schedule.getSubject().getName())
