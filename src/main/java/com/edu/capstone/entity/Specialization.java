@@ -47,7 +47,7 @@ public class Specialization {
 	@JsonIgnore
 	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToMany(mappedBy = "specializations", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToMany(mappedBy = "specializations", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<Subject> subjects = new HashSet<>();
 	
 	public void addSubjects(Subject subject) {

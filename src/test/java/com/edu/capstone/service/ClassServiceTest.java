@@ -24,8 +24,6 @@ public class ClassServiceTest {
 	@Autowired
 	private ClassService classService;
 	@Autowired
-	private AccountService accountService;
-	@Autowired
 	private SpecializationService specService;
 	@Autowired
 	private SubjectService subjectService;
@@ -58,7 +56,7 @@ public class ClassServiceTest {
 		s.add(1);
 		s.add(2);
 		SpecializationRequest request = SpecializationRequest.builder()
-				.name("HELLO WORLD 3")
+				.name("HELLO WORLD 5")
 				.subjectId(s)
 				.build();
 		Set<Subject> subjects = new HashSet<>();
@@ -73,8 +71,8 @@ public class ClassServiceTest {
 		List<Integer> s = new ArrayList<>();
 		s.add(1);
 		SpecializationRequest request = SpecializationRequest.builder()
-				.specId(10)
-				.name("HELLO WORLD 3")
+				.specId(13)
+				.name("HELLO WORLD 6")
 				.subjectId(s)
 				.build();
 		Set<Subject> subjects = new HashSet<>();

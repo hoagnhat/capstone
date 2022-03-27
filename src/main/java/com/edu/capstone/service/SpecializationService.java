@@ -1,9 +1,13 @@
 package com.edu.capstone.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,18 +86,21 @@ public class SpecializationService {
 	 * 
 	 * @version 1.0 - Initiation (Feb 1, 2022 by <b>NhatHH</b>)
 	 */
+	@Transactional(value = TxType.REQUIRES_NEW)
 	public void update(SpecializationRequest request, Set<Subject> subjects) {
+		List<Subject> sss = new ArrayList<>();
 		// TODO: Need validate name
 		Specialization specialization = findById(request.getSpecId());
 		if (specialization == null) {
 			throw new EntityNotFoundException(ExceptionConstant.SPECIALIZATION_NOT_FOUND);
 		}
-		specialization.setName(request.getName());
-		for (Subject subject : specialization.getSubjects()) {
-			subject.removeSpec(specialization);
-			subjectService.save(subject);
+		for (Subject ssbt : specialization.getSubjects()) {
+			sss.add(ssbt);
 		}
-		specialization = specializationRepository.saveAndFlush(specialization);
+		specialization.setName(request.getName());
+		for (Subject ssbt : sss) {
+			specialization.removeSubjects(ssbt);
+		}
 		for (Subject subject : subjects) {
 			specialization.addSubjects(subject);
 		}
