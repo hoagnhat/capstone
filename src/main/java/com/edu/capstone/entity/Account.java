@@ -42,7 +42,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "schedules")
+@EqualsAndHashCode(exclude = {"schedules", "classes"})
 public class Account {
 
 	@Id

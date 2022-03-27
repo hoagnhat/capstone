@@ -35,7 +35,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "schedules")
+@EqualsAndHashCode(exclude = {"schedules", "students"})
 public class Classs {
 
 	@Id
@@ -57,5 +57,21 @@ public class Classs {
 	@ManyToMany(mappedBy = "classes", cascade = (CascadeType.MERGE))
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Set<Account> students = new HashSet<>();
+	
+	public void addStudent(Account teacher) {
+		if (students == null) {
+			students = new HashSet<>();
+		}
+		students.add(teacher);
+		teacher.getClasses().add(this);
+	}
+
+	public void removeStudent(Account teacher) {
+		if (students == null) {
+			students = new HashSet<>();
+		}
+		students.remove(teacher);
+		teacher.getClasses().remove(this);
+	}
 
 }

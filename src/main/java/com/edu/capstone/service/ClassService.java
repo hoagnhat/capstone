@@ -62,8 +62,7 @@ public class ClassService {
 		for (String studentId : request.getStudentIds()) {
 			Account student = accountService.findById(studentId);
 			Classs classs = getById(request.getClassId());
-			classs.getStudents().add(student);
-			student.getClasses().add(classs);
+			classs.addStudent(student);
 			classRepository.saveAndFlush(classs);
 		}
 	}

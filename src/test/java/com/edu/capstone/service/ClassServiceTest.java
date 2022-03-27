@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.edu.capstone.entity.Subject;
 import com.edu.capstone.request.AddCourseForClassRequest;
+import com.edu.capstone.request.AddStudentIntoClassRequest;
 import com.edu.capstone.request.ClassRequest;
 import com.edu.capstone.request.SpecializationRequest;
 
@@ -86,6 +87,19 @@ public class ClassServiceTest {
 	public void deleteSubject() {
 		int subjectId = 1;
 		subjectService.delete(subjectId);
+	}
+	
+	@Test
+	public void addStudent() {
+		List<String> studentId = new ArrayList<>();
+		studentId.add("1");
+		studentId.add("2");
+		studentId.add("3");
+		AddStudentIntoClassRequest rq = AddStudentIntoClassRequest.builder()
+				.classId("SE1401")
+				.studentIds(studentId)
+				.build();
+		classService.addStudent(rq);
 	}
 
 }
