@@ -15,7 +15,6 @@ public class SubjectRequest {
 
 	private String name;
 	private String subjectCode;
-	private int totalSlot;
 	private List<Integer> specializations;
 	
 }
