@@ -27,7 +27,7 @@ public class CapstoneApplication extends SpringBootServletInitializer {
 	@PostConstruct
 	public void init() {
 		// Setting Spring Boot SetTimeZone
-		TimeZone.setDefault(TimeZone.getTimeZone("GMT+7:00"));
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Bangkok"));
 	}
 
 }

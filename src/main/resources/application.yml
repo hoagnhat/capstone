@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:mysql://sql6.freemysqlhosting.net:3306/sql6482141
     username: sql6482141
-    password: ZR3SXdg6ht
+    password: ZR3SXdg6ht  
   jpa:
     hibernate:
       ddl-auto: update
