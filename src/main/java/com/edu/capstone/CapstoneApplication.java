@@ -22,12 +22,6 @@ public class CapstoneApplication extends SpringBootServletInitializer {
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(CapstoneApplication.class);
-	}
-	
-	@PostConstruct
-	public void init() {
-		// Setting Spring Boot SetTimeZone
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Bangkok"));
-	}
+	}		
 
 }
