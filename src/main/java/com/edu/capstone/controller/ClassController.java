@@ -51,6 +51,7 @@ public class ClassController {
 						.avatar(profile.getAvatar())
 						.phone(profile.getPhone())
 						.email(student.getEmail())
+						.personalEmail(profile.getPersonalEmail())
 						.build();
 				students.add(studentResponse);
 			}
@@ -59,6 +60,8 @@ public class ClassController {
 						.subjectId(subject.getSubject().getId())
 						.subjectCode(subject.getSubject().getSubjectCode())
 						.teacherName(profileService.findByAccountId(subject.getTeacher().getId()).getName())
+						.startDate(subject.getDateStart())
+						.endDate(subject.getDateEnd())
 						.build();
 				classSubjectResponses.add(classSubjectResponse);
 			}
@@ -86,13 +89,19 @@ public class ClassController {
 					.accountId(student.getId())
 					.name(profile.getName())
 					.avatar(profile.getAvatar())
+					.phone(profile.getPhone())
+					.email(student.getEmail())
+					.personalEmail(profile.getPersonalEmail())
 					.build();
 			students.add(studentResponse);
 		}
 		for (ClassSubject subject : subjects) {
 			ClassSubjectResponse classSubjectResponse = ClassSubjectResponse.builder()
+					.subjectId(subject.getSubject().getId())
 					.subjectCode(subject.getSubject().getSubjectCode())
 					.teacherName(profileService.findByAccountId(subject.getTeacher().getId()).getName())
+					.startDate(subject.getDateStart())
+					.endDate(subject.getDateEnd())
 					.build();
 			classSubjectResponses.add(classSubjectResponse);
 		}

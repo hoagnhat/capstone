@@ -1,5 +1,5 @@
-package com.edu.capstone.service;
 
+package com.edu.capstone.service;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.time.LocalDateTime;
@@ -360,6 +360,7 @@ public class AccountService {
 		List<AccountResponse> responses = new ArrayList<>();
 		List<Account> accounts = accountRepository.findByIsActived(1);
 		for (Account account : accounts) {
+			Profile profile = profileRepository.findById(account.getId()).get();
 			List<String> roles = new ArrayList<>();
 			List<String> classs = new ArrayList<>();
 			List<String> subjects = new ArrayList<>();
@@ -375,11 +376,100 @@ public class AccountService {
 			}
 			AccountResponse response = AccountResponse.builder()
 					.accountId(account.getId())
+					.name(profile.getName())
+					.avatar(profile.getAvatar())
+					.age(profile.getAge())
+					.address(profile.getAddress())
+					.gender(profile.getGender())
+					.phone(profile.getPhone())
+					.email(account.getEmail())
+					.personalEmail(profile.getPersonalEmail())
 					.roles(roles)
 					.classs(classs)
 					.subjects(subjects)
+					.specialization(account.getSpecialization().getName())
 					.build();
 			responses.add(response);
+		}
+		return responses;
+	}
+	
+	public List<AccountResponse> getTeachers() {
+		List<AccountResponse> responses = new ArrayList<>();
+		List<Account> accounts = accountRepository.findAll();
+		for (Account account : accounts) {
+			List<String> roles = new ArrayList<>();
+			List<String> classs = new ArrayList<>();
+			List<String> subjects = new ArrayList<>();
+			for (Role role : account.getRoles()) {
+				if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
+					Profile profile = profileRepository.findById(account.getId()).get();
+					roles.add(role.getRoleName());
+					for (Classs sclass : account.getClasses()) {
+						classs.add(sclass.getId());
+						List<ClassSubject> csubjectss = csRepo.findByKeyClasssId(sclass.getId());
+						for (ClassSubject subject : csubjectss) {
+							subjects.add(subject.getSubject().getSubjectCode());
+						}
+					}
+					AccountResponse response = AccountResponse.builder()
+							.accountId(account.getId())
+							.name(profile.getName())
+							.avatar(profile.getAvatar())
+							.age(profile.getAge())
+							.address(profile.getAddress())
+							.gender(profile.getGender())
+							.phone(profile.getPhone())
+							.email(account.getEmail())
+							.personalEmail(profile.getPersonalEmail())
+							.roles(roles)
+							.classs(classs)
+							.subjects(subjects)
+							.specialization(account.getSpecialization().getName())
+							.build();
+					responses.add(response);
+				}
+			}
+		}
+		return responses;
+	}
+	
+	public List<AccountResponse> getStudents() {
+		List<AccountResponse> responses = new ArrayList<>();
+		List<Account> accounts = accountRepository.findAll();
+		for (Account account : accounts) {
+			List<String> roles = new ArrayList<>();
+			List<String> classs = new ArrayList<>();
+			List<String> subjects = new ArrayList<>();
+			for (Role role : account.getRoles()) {
+				if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
+					Profile profile = profileRepository.findById(account.getId()).get();
+					roles.add(role.getRoleName());
+					for (Classs sclass : account.getClasses()) {
+						classs.add(sclass.getId());
+						List<ClassSubject> csubjectss = csRepo.findByKeyClasssId(sclass.getId());
+						for (ClassSubject subject : csubjectss) {
+							subjects.add(subject.getSubject().getSubjectCode());
+						}
+					}
+					AccountResponse response = AccountResponse.builder()
+							.accountId(account.getId())
+							.name(profile.getName())
+							.avatar(profile.getAvatar())
+							.age(profile.getAge())
+							.address(profile.getAddress())
+							.gender(profile.getGender())
+							.phone(profile.getPhone())
+							.email(account.getEmail())
+							.personalEmail(profile.getPersonalEmail())
+							.roles(roles)
+							.classs(classs)
+							.subjects(subjects)
+							.specialization(account.getSpecialization().getName())
+							.build();
+					responses.add(response);
+				}
+			}
 		}
 		return responses;
 	}

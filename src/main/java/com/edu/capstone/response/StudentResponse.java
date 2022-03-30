@@ -16,5 +16,6 @@ public class StudentResponse {
 	private String avatar;
 	private String phone;
 	private String email;
+	private String personalEmail;
 
 }

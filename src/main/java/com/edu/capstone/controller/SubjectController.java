@@ -14,14 +14,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.capstone.entity.Account;
+import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Profile;
 import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.entity.Subject;
+import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.request.CreateSubjectRequest;
 import com.edu.capstone.request.SubjectRequest;
 import com.edu.capstone.response.StudentResponse;
 import com.edu.capstone.response.SubjectResponse;
+import com.edu.capstone.service.ClassService;
 import com.edu.capstone.service.ProfileService;
 import com.edu.capstone.service.ScheduleService;
 import com.edu.capstone.service.SpecializationService;
@@ -39,6 +42,10 @@ public class SubjectController {
 	private ProfileService profileService;
 	@Autowired
 	private ScheduleService scheduleService;
+	@Autowired
+	private ClassSubjectRepository csRepo;
+	@Autowired
+	private ClassService classService;
 	
 	@GetMapping
 	public List<SubjectResponse> getAll() {
@@ -46,6 +53,10 @@ public class SubjectController {
 		List<SubjectResponse> responses = new ArrayList<>();
 		for (Subject subject : subjects) {
 			List<StudentResponse> teachers = new ArrayList<>();
+			List<String> classes = new ArrayList<>();
+			for (ClassSubject cs : csRepo.findByKeySubjectId(subject.getId())) {
+				classes.add(classService.findById(cs.getKey().getClasssId()).getId());
+			}
 			for (Account teacher : subject.getTeachers()) {
 				Profile profile = profileService.findByAccountId(teacher.getId());
 				StudentResponse teacherResponse = StudentResponse.builder()
@@ -67,6 +78,7 @@ public class SubjectController {
 			}
 			response.setSpecializations(specNameList);
 			response.setTeachers(teachers);
+			response.setClasses(classes);
 			responses.add(response);
 		}
 		return responses; 

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.entity.key.CSKey;
@@ -23,7 +22,6 @@ import com.edu.capstone.request.CreateScheduleRequest;
 import com.edu.capstone.request.ImportScheduleRequest;
 import com.edu.capstone.response.ScheResponse;
 import com.edu.capstone.response.ScheSubResponse;
-import com.edu.capstone.service.AccountService;
 import com.edu.capstone.service.ProfileService;
 import com.edu.capstone.service.ScheduleService;
 
@@ -36,13 +34,10 @@ public class ScheduleController {
 	@Autowired
 	private ProfileService profileService;
 	@Autowired
-	private AccountService accountService;
-	@Autowired
 	private ClassSubjectRepository csRepo;
 	
 	@GetMapping("/ongoing")
 	public List<ScheResponse> getOnGoingSchedule() {
-		Account current = accountService.getCurrentAccount();
 		List<Schedule> schedules = scheduleService.getGoingOnSchedule();
 		List<ScheResponse> responses = new ArrayList<>();
 		for (Schedule schedule : schedules) {
@@ -64,7 +59,7 @@ public class ScheduleController {
 					.timeEnd(schedule.getTimeEnd())
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
-					.teacherName(profileService.findByAccountId(current.getId()).getName())
+					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
 					.status(schedule.getStatus())
 					.subject(subRes)
 					.build();
@@ -75,7 +70,6 @@ public class ScheduleController {
 	
 	@GetMapping("/upcoming")
 	public List<ScheResponse> getUpcomingSchedule() {
-		Account current = accountService.getCurrentAccount();
 		List<Schedule> schedules = scheduleService.getUpcomingSchedule();
 		List<ScheResponse> responses = new ArrayList<>();
 		for (Schedule schedule : schedules) {
@@ -97,7 +91,7 @@ public class ScheduleController {
 					.timeEnd(schedule.getTimeEnd())
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
-					.teacherName(profileService.findByAccountId(current.getId()).getName())
+					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
 					.status(schedule.getStatus())
 					.subject(subRes)
 					.build();

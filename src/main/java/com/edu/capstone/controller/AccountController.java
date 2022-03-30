@@ -61,5 +61,15 @@ public class AccountController {
 	public List<AccountResponse> getActiveAccount() {
 		return accountService.getActiveAccounts();
 	}
+	
+	@GetMapping("/teachers")
+	public List<AccountResponse> getTeachers() {
+		return accountService.getTeachers();
+	}
+	
+	@GetMapping("/students")
+	public List<AccountResponse> getStudents() {
+		return accountService.getStudents();
+	}
 
 }
