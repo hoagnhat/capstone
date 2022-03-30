@@ -14,5 +14,6 @@ public class UpdateAttendanceLogRequest {
 	private String studentId;
 	private int slotId;
 	private String status;
+	private String description;
 	
 }

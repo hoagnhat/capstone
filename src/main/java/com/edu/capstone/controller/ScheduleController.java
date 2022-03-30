@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,7 +23,6 @@ import com.edu.capstone.request.CreateScheduleRequest;
 import com.edu.capstone.request.ImportScheduleRequest;
 import com.edu.capstone.response.ScheResponse;
 import com.edu.capstone.response.ScheSubResponse;
-import com.edu.capstone.response.ScheduleResponse;
 import com.edu.capstone.service.AccountService;
 import com.edu.capstone.service.ProfileService;
 import com.edu.capstone.service.ScheduleService;
@@ -107,12 +106,12 @@ public class ScheduleController {
 		return responses;
 	}
 	
-	@PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping
 	public void create(@RequestBody CreateScheduleRequest request) throws ParseException {
 		scheduleService.create(request);
 	}
 	
-	@PutMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PutMapping
 	public void update(@RequestParam("slotId") int slotId, @RequestBody CreateScheduleRequest request) throws ParseException {
 		scheduleService.update(slotId, request);
 	}
@@ -178,4 +177,9 @@ public class ScheduleController {
 		return responses;
 	}
 
+	@DeleteMapping
+	public void delete(@RequestParam("id") int id) {
+		scheduleService.delete(id);
+	}
+	
 }

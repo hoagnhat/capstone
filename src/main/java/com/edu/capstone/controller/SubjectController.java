@@ -1,12 +1,9 @@
 package com.edu.capstone.controller;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +18,6 @@ import com.edu.capstone.entity.Profile;
 import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.entity.Subject;
-import com.edu.capstone.repository.AccountRepository;
 import com.edu.capstone.request.CreateSubjectRequest;
 import com.edu.capstone.request.SubjectRequest;
 import com.edu.capstone.response.StudentResponse;
@@ -43,8 +39,6 @@ public class SubjectController {
 	private ProfileService profileService;
 	@Autowired
 	private ScheduleService scheduleService;
-	@Autowired
-	private AccountRepository accRepo;
 	
 	@GetMapping
 	public List<SubjectResponse> getAll() {
@@ -106,12 +100,12 @@ public class SubjectController {
 		return response;
 	}
 	
-	@PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping
 	public void create(@RequestBody CreateSubjectRequest request) {
 		subjectService.create(request);
 	}
 	
-	@PutMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PutMapping
 	public void update(@RequestParam("subjectId") int subjectId, @RequestBody SubjectRequest request) {
 		subjectService.update(subjectId, request);
 	}

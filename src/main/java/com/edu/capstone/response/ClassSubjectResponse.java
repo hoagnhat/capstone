@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ClassSubjectResponse {
 
+	private int subjectId;
 	private String subjectCode;
 	private String teacherName;
 		

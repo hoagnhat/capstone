@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -53,7 +52,7 @@ public class SpecializationController {
 		return response;
 	}
 
-	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping
 	public void create(@RequestBody CreateSpecRequest request) {
 		Set<Subject> subjects = new HashSet<>();
 		for (Integer subjectId : request.getSubjectId()) {
@@ -62,7 +61,7 @@ public class SpecializationController {
 		specService.create(request, subjects);
 	}
 
-	@PutMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PutMapping
 	public void update(@RequestBody SpecializationRequest request) {
 		Set<Subject> subjects = new HashSet<>();
 		for (Integer subjectId : request.getSubjectId()) {

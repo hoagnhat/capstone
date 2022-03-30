@@ -14,5 +14,7 @@ public class StudentResponse {
 	private String accountId;
 	private String name;
 	private String avatar;
+	private String phone;
+	private String email;
 
 }

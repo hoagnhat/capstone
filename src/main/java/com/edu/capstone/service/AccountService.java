@@ -3,7 +3,9 @@ package com.edu.capstone.service;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -25,14 +27,18 @@ import org.springframework.stereotype.Service;
 import com.edu.capstone.common.constant.AppConstant;
 import com.edu.capstone.common.constant.ExceptionConstant;
 import com.edu.capstone.entity.Account;
+import com.edu.capstone.entity.ClassSubject;
+import com.edu.capstone.entity.Classs;
 import com.edu.capstone.entity.Profile;
 import com.edu.capstone.entity.Role;
 import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.AccountRepository;
+import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.repository.ProfileRepository;
 import com.edu.capstone.request.AccountRequest;
 import com.edu.capstone.request.ChangePasswordRequest;
+import com.edu.capstone.response.AccountResponse;
 
 /**
  * @author NhatHH Date: Jan 30, 2022
@@ -54,6 +60,8 @@ public class AccountService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private ProfileRepository profileRepository;
+	@Autowired
+	private ClassSubjectRepository csRepo;
 
 	/**
 	 * Tìm tài khoản bằng email
@@ -338,6 +346,42 @@ public class AccountService {
 			}
 			return true;
 		}
+	}
+	
+	public void inactiveAccount(List<String> accountIds) {
+		for (String id : accountIds) {
+			Account account = findById(id);
+			account.setIsActived(0);
+			accountRepository.saveAndFlush(account);
+		}
+	}
+	
+	public List<AccountResponse> getActiveAccounts() {
+		List<AccountResponse> responses = new ArrayList<>();
+		List<Account> accounts = accountRepository.findByIsActived(1);
+		for (Account account : accounts) {
+			List<String> roles = new ArrayList<>();
+			List<String> classs = new ArrayList<>();
+			List<String> subjects = new ArrayList<>();
+			for (Role role : account.getRoles()) {
+				roles.add(role.getRoleName());
+			}
+			for (Classs sclass : account.getClasses()) {
+				classs.add(sclass.getId());
+				List<ClassSubject> csubjectss = csRepo.findByKeyClasssId(sclass.getId());
+				for (ClassSubject subject : csubjectss) {
+					subjects.add(subject.getSubject().getSubjectCode());
+				}
+			}
+			AccountResponse response = AccountResponse.builder()
+					.accountId(account.getId())
+					.roles(roles)
+					.classs(classs)
+					.subjects(subjects)
+					.build();
+			responses.add(response);
+		}
+		return responses;
 	}
 
 }

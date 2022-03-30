@@ -6,7 +6,6 @@ import java.util.List;
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +24,6 @@ import com.edu.capstone.request.LoginRequest;
 import com.edu.capstone.response.AccountResponse;
 import com.edu.capstone.service.AccountService;
 import com.edu.capstone.service.ProfileService;
-import com.edu.capstone.service.SubjectService;
 
 /**
  * @author NhatHH
@@ -80,12 +78,12 @@ public class AppController {
 				.build();
 	}
 	
-	@PostMapping(path = "/register", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping(path = "/register")
 	public void register(@RequestBody AccountRequest request) throws MessagingException {
 		accountService.create(request);
 	}
 		
-	@PostMapping(path = "/login", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping(path = "/login")
 	public void fakeLogin(@RequestBody LoginRequest request) {
 		// do login
 	}
@@ -95,7 +93,7 @@ public class AppController {
 		// do logout
 	}
 	
-	@PostMapping(path = "/changepassword", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping(path = "/changepassword")
 	public void changePassword(@RequestBody ChangePasswordRequest request) {
 		accountService.changePassword(request);
 	}

@@ -12,6 +12,7 @@ import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.AttendanceLog;
 import com.edu.capstone.entity.Classs;
 import com.edu.capstone.repository.AttendanceLogRepository;
+import com.edu.capstone.request.UpdateAttendanceLogRequest;
 
 /**
  * @author NhatHH Date: Feb 20, 2022
@@ -58,12 +59,17 @@ public class AttendanceLogService {
 		return logRepository.findBySlotIdAndStudentId(slotId, studentId);
 	}
 	
-	public void updateLog(String studentId, int slotId, String status) {
+	public void updateLog(UpdateAttendanceLogRequest request) {
+		int slotId = request.getSlotId();
+		String studentId = request.getStudentId();
+		String status = request.getStatus();
+		String description = request.getDescription();
 		AttendanceLog log = logRepository.findBySlotIdAndStudentId(slotId, studentId);
 		if (log == null) {
-			log = AttendanceLog.builder().studentId(studentId).slotId(slotId).status(status).build();
+			log = AttendanceLog.builder().studentId(studentId).slotId(slotId).status(status).description(description).build();
 		} else {
 			log.setStatus(status);
+			log.setDescription(description);
 		}
 		logRepository.saveAndFlush(log);
 	}

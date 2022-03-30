@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.capstone.entity.Account;
@@ -50,11 +49,14 @@ public class ClassController {
 						.accountId(student.getId())
 						.name(profile.getName())
 						.avatar(profile.getAvatar())
+						.phone(profile.getPhone())
+						.email(student.getEmail())
 						.build();
 				students.add(studentResponse);
 			}
 			for (ClassSubject subject : subjects) {
 				ClassSubjectResponse classSubjectResponse = ClassSubjectResponse.builder()
+						.subjectId(subject.getSubject().getId())
 						.subjectCode(subject.getSubject().getSubjectCode())
 						.teacherName(profileService.findByAccountId(subject.getTeacher().getId()).getName())
 						.build();
