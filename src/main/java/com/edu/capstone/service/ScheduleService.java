@@ -74,7 +74,10 @@ public class ScheduleService {
 			if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
 				for (Schedule schedule : schedules) {
 					if (schedule.getTimeStart().before(convertToDateViaInstant(LocalDateTime.now())) && schedule.getTimeEnd().after(convertToDateViaInstant(LocalDateTime.now()))) {
-						result.add(schedule);
+						AttendanceLog log = logService.getBySlotIdAndStudentId(current.getId(), schedule.getId());
+						if (log != null) {
+							result.add(schedule);
+						}
 					}
 				}
 			} else if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
@@ -97,7 +100,10 @@ public class ScheduleService {
 		for (Role role : current.getRoles()) {
 			if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
 				for (Schedule schedule : schedules) {
-					result.add(schedule);
+					AttendanceLog log = logService.getBySlotIdAndStudentId(current.getId(), schedule.getId());
+					if (log != null) {
+						result.add(schedule);
+					}
 				}
 			} else if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
 				for (Schedule schedule : schedules) {

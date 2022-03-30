@@ -4,17 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Classs;
 import com.edu.capstone.entity.Profile;
+import com.edu.capstone.entity.key.CSKey;
+import com.edu.capstone.repository.AccountRepository;
+import com.edu.capstone.repository.ClassRepository;
 import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.request.AddCourseForClassRequest;
 import com.edu.capstone.request.AddStudentIntoClassRequest;
@@ -35,6 +40,10 @@ public class ClassController {
 	private ClassSubjectRepository csRepo;
 	@Autowired
 	private ProfileService profileService;
+	@Autowired
+	private AccountRepository accRepo;
+	@Autowired
+	private ClassRepository classRepo;
 	
 	@GetMapping
 	public List<ClassResponse> getAll() {
@@ -128,6 +137,18 @@ public class ClassController {
 	@PostMapping("/addcourse")
 	public void addCourseForClass(@RequestBody AddCourseForClassRequest request) {
 		classService.addCourse(request);
+	}
+	
+	@DeleteMapping("/deletecourse")
+	public void deleteCourseOutClass(@RequestParam("classId") String classId, @RequestParam("subjectId") int subjectId) {
+		csRepo.deleteById(CSKey.builder().classsId(classId).subjectId(subjectId).build());
+	}
+	
+	@DeleteMapping("/deletestudent")
+	public void deleteStudentOutClass(@RequestParam("classId") String classId, @RequestParam("studentId") String accountId) {
+		Classs classs = classService.findById(classId);
+		classs.getStudents().remove(accRepo.findById(accountId).get());
+		classRepo.saveAndFlush(classs);
 	}
 
 }
