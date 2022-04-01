@@ -269,7 +269,7 @@ public class AccountService {
 		if (!passwordEncoder.matches(request.getOldPassword(), current.getPassword())) {
 			throw new RuntimeException(ExceptionConstant.OLD_PASSWORD_WRONG_MSG); 
 		}
-		current.setPassword(request.getNewPassword());
+		current.setPassword(passwordEncoder.encode(request.getNewPassword()));
 		accountRepository.saveAndFlush(current);
 	}
 	
