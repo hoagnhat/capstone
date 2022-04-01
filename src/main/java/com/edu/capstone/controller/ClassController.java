@@ -1,6 +1,10 @@
 package com.edu.capstone.controller;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +21,21 @@ import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Classs;
 import com.edu.capstone.entity.Profile;
-import com.edu.capstone.entity.Subject;
+import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.entity.key.CSKey;
 import com.edu.capstone.repository.AccountRepository;
 import com.edu.capstone.repository.ClassRepository;
 import com.edu.capstone.repository.ClassSubjectRepository;
+import com.edu.capstone.repository.ScheduleRepository;
 import com.edu.capstone.request.AddCourseForClassRequest;
 import com.edu.capstone.request.AddStudentIntoClassRequest;
 import com.edu.capstone.request.ClassRequest;
 import com.edu.capstone.response.ClassResponse;
 import com.edu.capstone.response.ClassSubjectResponse;
+import com.edu.capstone.response.ClasssRes;
 import com.edu.capstone.response.StudentResponse;
 import com.edu.capstone.service.ClassService;
 import com.edu.capstone.service.ProfileService;
-import com.edu.capstone.service.SubjectService;
 
 @RestController
 @RequestMapping("/class")
@@ -46,6 +51,8 @@ public class ClassController {
 	private AccountRepository accRepo;
 	@Autowired
 	private ClassRepository classRepo;
+	@Autowired
+	private ScheduleRepository scheRepo;
 	
 	@GetMapping
 	public List<ClassResponse> getAll() {
@@ -162,6 +169,37 @@ public class ClassController {
 		Classs classs = classService.findById(classId);
 		classs.getStudents().remove(accRepo.findById(accountId).get());
 		classRepo.saveAndFlush(classs);
+	}
+	
+	@GetMapping("/ongoing")
+	public void getOnGoingClass() {
+		LocalDateTime now = LocalDateTime.now();		
+		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		String nowStr = now.format(formatter1);
+		LocalDateTime nowEnd = LocalDateTime.parse(nowStr + "T23:59:59");		
+		List<Schedule> schedules = scheRepo.findByTimeEndBetween(convertToDateViaInstant(now), convertToDateViaInstant(nowEnd));
+		List<ClasssRes> responses = new ArrayList<>();
+		for (Schedule schedule : schedules) {
+			Classs classs = schedule.getClasss();
+			ClasssRes response = ClasssRes.builder()
+					.classId(classs.getId())
+					.room(schedule.getRoom())
+					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
+					.subjectName(schedule.getSubject().getName())
+					.build();
+		}
+	}
+	
+	public LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
+	    return dateToConvert.toInstant()
+	      .atZone(ZoneId.systemDefault())
+	      .toLocalDateTime();
+	}
+	
+	public Date convertToDateViaInstant(LocalDateTime dateToConvert) {
+	    return java.util.Date
+	      .from(dateToConvert.atZone(ZoneId.systemDefault())
+	      .toInstant());
 	}
 
 }

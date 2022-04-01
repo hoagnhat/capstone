@@ -35,48 +35,10 @@ public class AppController {
 	
 	@Autowired
 	private AccountService accountService;
-	@Autowired
-	private ProfileService profileService;
 	
 	@GetMapping
-	public AccountResponse success() {
-		Account account = accountService.getCurrentAccount();
-		List<String> roles = new ArrayList<>();
-		List<String> classses = new ArrayList<>();
-		List<String> subjects = new ArrayList<>();
-		Profile profile = profileService.findByAccountId(account.getId());
-		for (Role role : account.getRoles()) {
-			roles.add(role.getRoleName());
-		}
-		for (Classs classs : account.getClasses()) {
-			classses.add(classs.getId());
-		}
-		if (roles.indexOf(AppConstant.ROLE_TEACHER) != -1) {
-			for (Subject subject : account.getTeachSubjects()) {
-				subjects.add(subject.getSubjectCode());
-			}
-		} else if (roles.indexOf(AppConstant.ROLE_STUDENT) != -1) {
-			for (Classs classs : account.getClasses()) {
-				for (Schedule schedule : classs.getSchedules()) {
-					if (subjects.indexOf(schedule.getSubject().getSubjectCode()) != -1) {
-						subjects.add(schedule.getSubject().getSubjectCode());
-					}
-				}
-			}
-		}
-		return AccountResponse.builder()
-				.accountId(account.getId())
-				.name(profile.getName())
-				.avatar(profile.getAvatar())
-				.roles(roles)
-				.phone(profile.getPhone())
-				.address(profile.getAddress())
-				.gender(profile.getGender())
-				.personalEmail(profile.getPersonalEmail())
-				.classs(classses)
-				.subjects(subjects)
-				.specialization(account.getSpecialization().getName())
-				.build();
+	public String success() {
+		return "Login successfull";
 	}
 	
 	@PostMapping(path = "/register")
