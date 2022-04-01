@@ -111,7 +111,7 @@ public class ScheduleController {
 	}
 	
 	@PostMapping("/import")
-	public void importSchedule(@RequestParam("schedules") List<ImportScheduleRequest> request) {
+	public void importSchedule(@RequestBody List<ImportScheduleRequest> request) {
 		scheduleService.importSchedule(request);
 	}
 	
