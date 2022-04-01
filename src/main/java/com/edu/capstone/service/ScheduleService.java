@@ -125,8 +125,8 @@ public class ScheduleService {
 			for (int i = 0; i < 10; i++) {
 				LocalDateTime timeStart = convertToLocalDateTimeViaInstant(schedule.getTimeStart());
 				LocalDateTime timeEnd = convertToLocalDateTimeViaInstant(schedule.getTimeEnd());
-				timeStart.plusDays((long) i * 7);
-				timeEnd.plusDays((long) i * 7);
+				timeStart = timeStart.plusDays((long) i * 7);
+				timeEnd = timeEnd.plusDays((long) i * 7);
 				Schedule s = Schedule.builder()
 						.room(schedule.getRoom())
 						.timeStart(convertToDateViaInstant(timeStart))
