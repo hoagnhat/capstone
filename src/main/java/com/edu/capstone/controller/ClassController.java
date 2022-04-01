@@ -17,6 +17,7 @@ import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Classs;
 import com.edu.capstone.entity.Profile;
+import com.edu.capstone.entity.Subject;
 import com.edu.capstone.entity.key.CSKey;
 import com.edu.capstone.repository.AccountRepository;
 import com.edu.capstone.repository.ClassRepository;
@@ -29,6 +30,7 @@ import com.edu.capstone.response.ClassSubjectResponse;
 import com.edu.capstone.response.StudentResponse;
 import com.edu.capstone.service.ClassService;
 import com.edu.capstone.service.ProfileService;
+import com.edu.capstone.service.SubjectService;
 
 @RestController
 @RequestMapping("/class")
@@ -59,6 +61,9 @@ public class ClassController {
 						.name(profile.getName())
 						.avatar(profile.getAvatar())
 						.phone(profile.getPhone())
+						.age(profile.getAge())
+						.gender(profile.getGender())
+						.address(profile.getAddress())
 						.email(student.getEmail())
 						.personalEmail(profile.getPersonalEmail())
 						.build();
@@ -67,6 +72,7 @@ public class ClassController {
 			for (ClassSubject subject : subjects) {
 				ClassSubjectResponse classSubjectResponse = ClassSubjectResponse.builder()
 						.subjectId(subject.getSubject().getId())
+						.subjectName(subject.getSubject().getName())
 						.subjectCode(subject.getSubject().getSubjectCode())
 						.teacherName(profileService.findByAccountId(subject.getTeacher().getId()).getName())
 						.startDate(subject.getDateStart())
@@ -99,6 +105,9 @@ public class ClassController {
 					.name(profile.getName())
 					.avatar(profile.getAvatar())
 					.phone(profile.getPhone())
+					.age(profile.getAge())
+					.gender(profile.getGender())
+					.address(profile.getAddress())
 					.email(student.getEmail())
 					.personalEmail(profile.getPersonalEmail())
 					.build();
@@ -107,6 +116,7 @@ public class ClassController {
 		for (ClassSubject subject : subjects) {
 			ClassSubjectResponse classSubjectResponse = ClassSubjectResponse.builder()
 					.subjectId(subject.getSubject().getId())
+					.subjectName(subject.getSubject().getName())
 					.subjectCode(subject.getSubject().getSubjectCode())
 					.teacherName(profileService.findByAccountId(subject.getTeacher().getId()).getName())
 					.startDate(subject.getDateStart())
@@ -141,6 +151,9 @@ public class ClassController {
 	
 	@DeleteMapping("/deletecourse")
 	public void deleteCourseOutClass(@RequestParam("classId") String classId, @RequestParam("subjectId") int subjectId) {
+		ClassSubject cs = csRepo.findByKeyClasssIdAndKeySubjectId(classId, subjectId);
+		cs.setSubject(null);
+		cs.setTeacher(null);
 		csRepo.deleteById(CSKey.builder().classsId(classId).subjectId(subjectId).build());
 	}
 	

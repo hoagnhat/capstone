@@ -105,4 +105,26 @@ public class Account {
 		teachSubjects.remove(subject);
 		subject.getTeachers().remove(this);
 	}
+	
+	public void addSchedule(Schedule schedule) {
+		if (schedules == null) {
+			schedules = new HashSet<>();
+		}
+		schedules.add(schedule);
+		schedule.setTeacher(this);
+	}
+
+	public void removeSchedule(Schedule schedule) {
+		if (schedules == null) {
+			schedules = new HashSet<>();
+		}
+		schedules.remove(schedule);
+		schedule.setTeacher(null);
+	}
+	
+	public void removeClass(Classs classs) {
+		if (classes == null) classes = new HashSet<>();
+		classes.remove(classs);
+		classs.getStudents().remove(this);
+	}
 }

@@ -29,14 +29,14 @@ public class AttendanceLogService {
 		return logRepository.findBySlotId(slotId);
 	}
 
-	public void importStudentIntoSlotLog(int slotId, String classId) {
+	public void importStudentIntoSlotLog(int slotId, String classId, String description) {
 		Classs classs = classService.getById(classId);
 		Set<Account> students = classs.getStudents();
 		Iterator<Account> iterator = students.iterator();
 		while (iterator.hasNext()) {
 			Account student = iterator.next();
 			AttendanceLog log = AttendanceLog.builder().studentId(student.getId()).slotId(slotId)
-					.status(AppConstant.ATTENDANCE_NOT_YET_STATUS).build();
+					.status(AppConstant.ATTENDANCE_NOT_YET_STATUS).description(description).build();
 			logRepository.saveAndFlush(log);
 		}
 	}

@@ -6,8 +6,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -55,23 +53,28 @@ public class Classs {
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToMany(mappedBy = "classes", cascade = (CascadeType.MERGE))
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Set<Account> students = new HashSet<>();
 	
 	public void addStudent(Account teacher) {
-		if (students == null) {
-			students = new HashSet<>();
-		}
 		students.add(teacher);
 		teacher.getClasses().add(this);
 	}
 
-	public void removeStudent(Account teacher) {
-		if (students == null) {
-			students = new HashSet<>();
-		}
-		students.remove(teacher);
-		teacher.getClasses().remove(this);
+	public void removeStudent(Account student) {
+		students.remove(student);
+		student.getClasses().remove(this);
+	}
+	
+	public void addSchedule(Schedule schedule) {
+		if (schedules == null) schedules = new HashSet<>();
+		schedules.add(schedule);
+		schedule.setClasss(this);
+	}
+	
+	public void removeSchedule(Schedule schedule) {
+		if (schedules == null) schedules = new HashSet<>();
+		schedules.remove(schedule);
+		schedule.setClasss(null);
 	}
 
 }

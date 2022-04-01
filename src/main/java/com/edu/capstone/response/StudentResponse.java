@@ -16,6 +16,9 @@ public class StudentResponse {
 	private String avatar;
 	private String phone;
 	private String email;
+	private int age;
+	private String address;
+	private int gender;
 	private String personalEmail;
 
 }

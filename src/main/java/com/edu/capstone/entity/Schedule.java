@@ -57,7 +57,7 @@ public class Schedule {
 	private Account teacher;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
+	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "subject_id", referencedColumnName = "id", insertable = true, updatable = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Subject subject;

@@ -19,10 +19,13 @@ import com.edu.capstone.common.constant.AppConstant;
 import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.AttendanceLog;
 import com.edu.capstone.entity.ClassSubject;
+import com.edu.capstone.entity.Classs;
 import com.edu.capstone.entity.Role;
 import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.entity.Subject;
 import com.edu.capstone.entity.key.CSKey;
+import com.edu.capstone.repository.AccountRepository;
+import com.edu.capstone.repository.ClassRepository;
 import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.repository.ScheduleRepository;
 import com.edu.capstone.request.AddCourseForClassRequest;
@@ -55,6 +58,10 @@ public class ClassServiceTest {
 	private ScheduleRepository scheRepo;
 	@Autowired
 	private AttendanceLogService logService;
+	@Autowired
+	private AccountRepository accRepo;
+	@Autowired
+	private ClassRepository classRepo;
 	
 	@Test
 	public void createClass() {
@@ -266,6 +273,27 @@ public class ClassServiceTest {
 			}
 		}
 		String a = "a";
+	}
+	
+	@Test
+	public void testDeleteSchedule() {
+		scheduleService.delete(1);
+	}
+	
+	@Test
+	public void deleteCourseOutClass() {
+		ClassSubject cs = csRepo.findByKeyClasssIdAndKeySubjectId("SE1401", 1);
+		cs.setSubject(null);
+		cs.setTeacher(null);
+		csRepo.deleteById(CSKey.builder().classsId("SE1401").subjectId(1).build());
+	}
+	
+	@Test
+	public void deleteStudentOutClass() {
+		Classs classs = classService.findById("SE1401");
+		Account student = accRepo.findById("1").get();
+		classs.removeStudent(student);
+		classRepo.save(classs);
 	}
 	
 }

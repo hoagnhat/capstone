@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class ClassSubjectResponse {
 
 	private int subjectId;
+	private String subjectName;
 	private String subjectCode;
 	private String teacherName;
 	private Date startDate;

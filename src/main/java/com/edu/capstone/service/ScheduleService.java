@@ -3,7 +3,6 @@ package com.edu.capstone.service;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,10 +15,12 @@ import org.springframework.stereotype.Service;
 import com.edu.capstone.common.constant.AppConstant;
 import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.AttendanceLog;
+import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Classs;
 import com.edu.capstone.entity.Role;
 import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.exception.EntityNotFoundException;
+import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.repository.ScheduleRepository;
 import com.edu.capstone.request.CreateScheduleRequest;
 import com.edu.capstone.request.ImportScheduleRequest;
@@ -40,6 +41,8 @@ public class ScheduleService {
 	private SubjectService subjectService;
 	@Autowired
 	private AttendanceLogService logService;
+	@Autowired
+	private ClassSubjectRepository csRepo;
 
 	public int create(CreateScheduleRequest request) throws ParseException {
 		Schedule schedule = Schedule.builder().timeStart(request.getTimeStart()).timeEnd(request.getTimeEnd())
@@ -132,6 +135,16 @@ public class ScheduleService {
 						.teacher(accountService.findById(schedule.getTeacherId()))
 						.build();
 				scheduleRepository.saveAndFlush(s);
+				if (i == 0) {
+					ClassSubject cs = csRepo.findByKeyClasssIdAndKeySubjectId(schedule.getClassId(), schedule.getSubjectId());
+					cs.setDateStart(convertToDateViaInstant(timeStart.plusDays((long) i * 7)));
+					csRepo.saveAndFlush(cs);
+				} else if (i == 10) {
+					ClassSubject cs = csRepo.findByKeyClasssIdAndKeySubjectId(schedule.getClassId(), schedule.getSubjectId());
+					cs.setDateEnd(convertToDateViaInstant(timeEnd.plusDays((long) i * 7)));
+					csRepo.saveAndFlush(cs);
+				}
+				logService.importStudentIntoSlotLog(i, schedule.getClassId(), schedule.getDescription());
 			}
 		}
 	}
@@ -176,7 +189,10 @@ public class ScheduleService {
 	}
 	
 	public void delete(int id) {
-		scheduleRepository.deleteById(id);
+		Schedule schedule = scheduleRepository.findById(id).get();
+		schedule.getSubject().removeSchedule(schedule);
+		schedule.getClasss().removeSchedule(schedule);
+		scheduleRepository.delete(schedule);
 	}
 
 }
