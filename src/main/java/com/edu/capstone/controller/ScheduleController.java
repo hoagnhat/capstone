@@ -111,8 +111,8 @@ public class ScheduleController {
 	}
 	
 	@PostMapping("/import")
-	public void importSchedule(@RequestBody List<ImportScheduleRequest> request) {
-		scheduleService.importSchedule(request);
+	public void importSchedule(@RequestBody ImportScheduleRequest request) {
+		scheduleService.importSchedule(request.getSlots());
 	}
 	
 	@GetMapping("/byaccountid")

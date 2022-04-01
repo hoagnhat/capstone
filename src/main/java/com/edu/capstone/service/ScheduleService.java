@@ -24,6 +24,7 @@ import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.repository.ScheduleRepository;
 import com.edu.capstone.request.CreateScheduleRequest;
 import com.edu.capstone.request.ImportScheduleRequest;
+import com.edu.capstone.request.ScheRqqq;
 
 /**
  * @author NhatHH Date: Feb 20, 2022
@@ -119,8 +120,8 @@ public class ScheduleService {
 		return result;
 	}
 	
-	public void importSchedule(List<ImportScheduleRequest> request) {
-		for (ImportScheduleRequest schedule : request) {
+	public void importSchedule(List<ScheRqqq> request) {
+		for (ScheRqqq schedule : request) {
 			for (int i = 0; i < 10; i++) {
 				LocalDateTime timeStart = convertToLocalDateTimeViaInstant(schedule.getTimeStart());
 				LocalDateTime timeEnd = convertToLocalDateTimeViaInstant(schedule.getTimeEnd());

@@ -1,6 +1,6 @@
 package com.edu.capstone.request;
 
-import java.util.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,12 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ImportScheduleRequest {
 	
-	private int room;
-	private Date timeStart;
-	private Date timeEnd;
-	private String classId;
-	private int subjectId;
-	private String teacherId;
-	private String description;
+	private List<ScheRqqq> slots;
 
 }
