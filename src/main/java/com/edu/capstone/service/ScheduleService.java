@@ -135,7 +135,7 @@ public class ScheduleService {
 						.subject(subjectService.findById(schedule.getSubjectId()))
 						.teacher(accountService.findById(schedule.getTeacherId()))
 						.build();
-				scheduleRepository.saveAndFlush(s);
+				s = scheduleRepository.saveAndFlush(s);
 				if (i == 0) {
 					ClassSubject cs = csRepo.findByKeyClasssIdAndKeySubjectId(schedule.getClassId(), schedule.getSubjectId());
 					cs.setDateStart(convertToDateViaInstant(timeStart.plusDays((long) i * 7)));
@@ -145,7 +145,7 @@ public class ScheduleService {
 					cs.setDateEnd(convertToDateViaInstant(timeEnd.plusDays((long) i * 7)));
 					csRepo.saveAndFlush(cs);
 				}
-				logService.importStudentIntoSlotLog(i, schedule.getClassId(), schedule.getDescription());
+				logService.importStudentIntoSlotLog(s.getId(), schedule.getClassId(), schedule.getDescription());
 			}
 		}
 	}
