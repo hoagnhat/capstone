@@ -138,11 +138,11 @@ public class ScheduleService {
 				s = scheduleRepository.saveAndFlush(s);
 				if (i == 0) {
 					ClassSubject cs = csRepo.findByKeyClasssIdAndKeySubjectId(schedule.getClassId(), schedule.getSubjectId());
-					cs.setDateStart(convertToDateViaInstant(timeStart.plusDays((long) i * 7)));
+					cs.setDateStart(convertToDateViaInstant(timeStart));
 					csRepo.saveAndFlush(cs);
-				} else if (i == 10) {
+				} else if (i == 9) {
 					ClassSubject cs = csRepo.findByKeyClasssIdAndKeySubjectId(schedule.getClassId(), schedule.getSubjectId());
-					cs.setDateEnd(convertToDateViaInstant(timeEnd.plusDays((long) i * 7)));
+					cs.setDateEnd(convertToDateViaInstant(timeEnd));
 					csRepo.saveAndFlush(cs);
 				}
 				logService.importStudentIntoSlotLog(s.getId(), schedule.getClassId(), schedule.getDescription());
