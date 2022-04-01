@@ -172,7 +172,7 @@ public class ClassController {
 	}
 	
 	@GetMapping("/ongoing")
-	public void getOnGoingClass() {
+	public List<ClasssRes> getOnGoingClass() {
 		LocalDateTime now = LocalDateTime.now();		
 		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		String nowStr = now.format(formatter1);
@@ -187,7 +187,9 @@ public class ClassController {
 					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
 					.subjectName(schedule.getSubject().getName())
 					.build();
+			responses.add(response);
 		}
+		return responses;
 	}
 	
 	public LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
