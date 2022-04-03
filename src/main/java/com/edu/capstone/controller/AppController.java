@@ -40,7 +40,8 @@ public class AppController {
 
 	@GetMapping
 	public String success() {
-		return "Login successfull";
+		Account account = accountService.getCurrentAccount();
+		return account.getId();
 	}
 
 	@PostMapping(path = "/register")

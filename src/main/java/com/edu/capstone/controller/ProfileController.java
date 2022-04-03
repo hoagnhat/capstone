@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,41 @@ public class ProfileController {
 	@GetMapping
 	public AccountResponse getProfile() {
 		Account account = accountService.getCurrentAccount();
+		Profile profile = profileService.findByAccountId(account.getId());
+		List<String> roles = new ArrayList<>();
+		List<String> classs = new ArrayList<>();
+		List<String> subjects = new ArrayList<>();
+		for (Role role : account.getRoles()) {
+			roles.add(role.getRoleName());
+		}
+		for (Classs sclass : account.getClasses()) {
+			classs.add(sclass.getId());
+			List<ClassSubject> csubjectss = csRepo.findByKeyClasssId(sclass.getId());
+			for (ClassSubject subject : csubjectss) {
+				subjects.add(subject.getSubject().getSubjectCode());
+			}
+		}
+		AccountResponse response = AccountResponse.builder()
+				.accountId(account.getId())
+				.name(profile.getName())
+				.avatar(profile.getAvatar())
+				.gender(profile.getGender())
+				.age(profile.getAge())
+				.email(account.getEmail())
+				.phone(profile.getPhone())
+				.address(profile.getAddress())
+				.personalEmail(profile.getPersonalEmail())
+				.roles(roles)
+				.classs(classs)
+				.subjects(subjects)
+				.specialization(account.getSpecialization().getName())
+				.build();
+		return response;
+	}
+	
+	@GetMapping("/{id}")
+	public AccountResponse getById(@PathVariable("id") String id) {
+		Account account = accountService.findById(id);
 		Profile profile = profileService.findByAccountId(account.getId());
 		List<String> roles = new ArrayList<>();
 		List<String> classs = new ArrayList<>();
