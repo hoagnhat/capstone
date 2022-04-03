@@ -15,7 +15,7 @@ public class SpecResponse {
 	
 	private int specId;
 	private String name;
-	private int teacherCounts;
+	private Set<String> classesID;
 	private int studentCounts;
 	private Set<String> subjects;
 	

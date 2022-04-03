@@ -15,6 +15,7 @@ import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,7 +148,7 @@ public class AccountService {
 		// Lấy số thứ tự của email
 		String number = email.substring(email.indexOf(shortName) + shortName.length(), email.indexOf("@"));
 		int newNumber;
-		if (number.equals("")) {
+		if (number.equals("") || !NumberUtils.isCreatable(number)) {
 			newNumber = 1;
 		} else {
 			newNumber = Integer.parseInt(number) + 1;

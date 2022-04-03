@@ -45,13 +45,13 @@ public class SpecializationController {
 		List<Specialization> specializations = specService.getAll();
 		for (Specialization spec : specializations) {
 			Set<Subject> subjects = spec.getSubjects();
-			Set<String> teachers = new HashSet<>();
+			Set<String> classsIds = new HashSet<>();
 			Set<String> students = new HashSet<>();
 			Set<String> subjectsss = new HashSet<>();
 			for (Subject sub : subjects) {
 				List<Schedule> schedules = scheRepo.findBySubjectId(sub.getId());
 				for (Schedule sc : schedules) {
-					teachers.add(sc.getTeacher().getId());
+					classsIds.add(sc.getClasss().getId());
 					List<AttendanceLog> logs = logRepo.findBySlotId(sc.getId());
 					for (AttendanceLog log : logs) {
 						students.add(log.getStudentId());
@@ -62,7 +62,7 @@ public class SpecializationController {
 			SpecResponse response = SpecResponse.builder()
 					.specId(spec.getId())
 					.name(spec.getName())
-					.teacherCounts(teachers.size())
+					.classesID(classsIds)
 					.studentCounts(students.size())
 					.subjects(subjectsss)
 					.build();
@@ -75,13 +75,13 @@ public class SpecializationController {
 	public SpecResponse getById(@RequestParam("id") int id) {
 		Specialization spec = specService.findById(id);
 		Set<Subject> subjects = spec.getSubjects();
-		Set<String> teachers = new HashSet<>();
+		Set<String> classIds = new HashSet<>();
 		Set<String> students = new HashSet<>();
 		Set<String> subjectsss = new HashSet<>();
 		for (Subject sub : subjects) {
 			List<Schedule> schedules = scheRepo.findBySubjectId(sub.getId());
 			for (Schedule sc : schedules) {
-				teachers.add(sc.getTeacher().getId());
+				classIds.add(sc.getClasss().getId());
 				List<AttendanceLog> logs = logRepo.findBySlotId(sc.getId());
 				for (AttendanceLog log : logs) {
 					students.add(log.getStudentId());
@@ -92,7 +92,7 @@ public class SpecializationController {
 		SpecResponse response = SpecResponse.builder()
 				.specId(spec.getId())
 				.name(spec.getName())
-				.teacherCounts(teachers.size())
+				.classesID(classIds)
 				.studentCounts(students.size())
 				.subjects(subjectsss)
 				.build();
