@@ -138,7 +138,7 @@ public class AccountService {
 	public String generateEmail(String name) {
 		logger.info("Start generateEmail()");
 		String shortName = generateShortName(name);
-		Account account = accountRepository.findTop1ByEmailIgnoreCaseContains(shortName, Sort.by("email").descending());
+		Account account = accountRepository.findTop1ByEmailIgnoreCaseContains(shortName + "@", Sort.by("email").descending());
 		// Check whether account is null
 		if (account == null) {
 			return shortName + AppConstant.EMAIL_DOMAIN;
