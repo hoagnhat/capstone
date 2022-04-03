@@ -16,7 +16,7 @@ import com.edu.capstone.entity.Account;
 public interface AccountRepository extends JpaRepository<Account, String> {
 
 	Account findByEmail(String email);
-	Account findTop1ByEmailIgnoreCaseContains(String email, Sort sort);
+	Account findTop1ByEmailIgnoreCaseContainsOrderByEmailDesc(String email);
 	Account findTop1ByIdIgnoreCaseContains(String id, Sort sort);
 	List<Account> findByIsActived(int isActived);
 	
