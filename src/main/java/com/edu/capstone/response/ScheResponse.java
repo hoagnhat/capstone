@@ -21,5 +21,6 @@ public class ScheResponse {
 	private String teacherName;
 	private String status;
 	private ScheSubResponse subject;
-
+	private String teacherId;
+	private int totalStudents;
 }

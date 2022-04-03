@@ -40,7 +40,7 @@ public class ScheduleController {
 	public List<ScheResponse> getOnGoingSchedule() {
 		List<Schedule> schedules = scheduleService.getGoingOnSchedule();
 		List<ScheResponse> responses = new ArrayList<>();
-		for (Schedule schedule : schedules) {
+		for (Schedule schedule : schedules) {			
 			ClassSubject classSubject = csRepo.findByKeyClasssIdAndKeySubjectId(schedule.getClasss().getId(), schedule.getSubject().getId());
 			ScheSubResponse subRes = ScheSubResponse.builder()
 					.id(schedule.getSubject().getId())
@@ -60,6 +60,8 @@ public class ScheduleController {
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
 					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
+					.teacherId(schedule.getTeacher().getId())
+					.totalStudents(schedule.getClasss().getStudents().size())
 					.status(schedule.getStatus())
 					.subject(subRes)
 					.build();

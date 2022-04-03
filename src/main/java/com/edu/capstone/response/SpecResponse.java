@@ -18,5 +18,5 @@ public class SpecResponse {
 	private int teacherCounts;
 	private int studentCounts;
 	private Set<String> subjects;
-
+	
 }

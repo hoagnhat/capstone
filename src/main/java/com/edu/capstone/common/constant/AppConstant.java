@@ -20,7 +20,9 @@ public class AppConstant {
 	
 	public static final long EXPIRED_LIMIT_TIME = 15;
 	
-	public static final String ATTENDANCE_NOT_YET_STATUS = "NOT YET";
+	
+	public static final String SCHEDULE_NOT_YET_STATUS = "NOT YET";
+	public static final String SCHEDULE_ATTENDED_STATUS = "ATTENDED";
 	public static final String ATTENDANCE_PRESENT_STATUS = "PRESENT";
 	public static final String ATTENDANCE_ABSENT_STATUS = "ABSENT";
 	

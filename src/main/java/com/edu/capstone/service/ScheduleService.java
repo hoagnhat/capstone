@@ -63,6 +63,7 @@ public class ScheduleService {
 		schedule.setClasss(classService.findById(request.getClassId()));
 		schedule.setTeacher(accountService.findById(request.getTeacherId()));
 		schedule.setSubject(subjectService.findById(request.getSubjectId()));
+		schedule.setStatus(request.getStatus());
 		scheduleRepository.saveAndFlush(schedule).getId();
 	}
 	
@@ -138,6 +139,7 @@ public class ScheduleService {
 						.classs(classService.findById(schedule.getClassId()))
 						.subject(subjectService.findById(schedule.getSubjectId()))
 						.teacher(accountService.findById(schedule.getTeacherId()))
+						.status(AppConstant.SCHEDULE_NOT_YET_STATUS)
 						.build();
 				s = scheduleRepository.saveAndFlush(s);
 				if (i == 0) {
