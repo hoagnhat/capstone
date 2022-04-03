@@ -1,6 +1,6 @@
 package com.edu.capstone.response;
 
-import java.util.List;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +15,8 @@ public class SpecResponse {
 	
 	private int specId;
 	private String name;
-	private List<String> subjects;
-
+	private int teacherCounts;
+	private int studentCounts;
+	private Set<String> subjects;
+	
 }

@@ -19,5 +19,6 @@ public class CreateScheduleRequest {
 	private String classId;
 	private int subjectId;
 	private String teacherId;
+	private String status;
 
 }

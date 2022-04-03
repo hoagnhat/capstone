@@ -36,7 +36,7 @@ public class AttendanceLogService {
 		while (iterator.hasNext()) {
 			Account student = iterator.next();
 			AttendanceLog log = AttendanceLog.builder().studentId(student.getId()).slotId(slotId)
-					.status(AppConstant.ATTENDANCE_NOT_YET_STATUS).description(description).build();
+					.status(AppConstant.ATTENDANCE_ABSENT_STATUS).description(description).build();
 			logRepository.saveAndFlush(log);
 		}
 	}
