@@ -250,30 +250,30 @@ public class ClassServiceTest {
 		String a = "a";
 	}
 	
-	@Test
-	public void testUpcoming() {
-		List<Schedule> schedules = scheRepo.findByTimeStartAfter(new Date());
-		List<Schedule> result = new ArrayList<>();
-		List<Role> roles = new ArrayList<>();
-		roles.add(Role.builder().roleName(AppConstant.ROLE_TEACHER).build());
-		for (Role role : roles) {
-			if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
-				for (Schedule schedule : schedules) {
-					AttendanceLog log = logService.getBySlotIdAndStudentId("LE00002", schedule.getId());
-					if (log != null) {
-						result.add(schedule);
-					}
-				}
-			} else if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
-				for (Schedule schedule : schedules) {
-					if (schedule.getTeacher().getId().equals("LE00002")) {
-						result.add(schedule);
-					}
-				}
-			}
-		}
-		String a = "a";
-	}
+//	@Test
+//	public void testUpcoming() {
+//		List<Schedule> schedules = scheRepo.findByTimeStartAfter(new Date());
+//		List<Schedule> result = new ArrayList<>();
+//		List<Role> roles = new ArrayList<>();
+//		roles.add(Role.builder().roleName(AppConstant.ROLE_TEACHER).build());
+//		for (Role role : roles) {
+//			if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
+//				for (Schedule schedule : schedules) {
+//					AttendanceLog log = logService.getBySlotIdAndStudentId("LE00002", schedule.getId());
+//					if (log != null) {
+//						result.add(schedule);
+//					}
+//				}
+//			} else if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
+//				for (Schedule schedule : schedules) {
+//					if (schedule.getTeacher().getId().equals("LE00002")) {
+//						result.add(schedule);
+//					}
+//				}
+//			}
+//		}
+//		String a = "a";
+//	}
 	
 	@Test
 	public void testDeleteSchedule() {

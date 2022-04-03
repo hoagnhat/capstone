@@ -16,8 +16,9 @@ import com.edu.capstone.entity.Schedule;
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 	
 	List<Schedule> findByTimeEndBetween(Date startTime, Date endTime);
-	List<Schedule> findByTimeStartAfter(Date startTime);
+	List<Schedule> findByTimeStartBetween(Date startTime, Date endTime);
 	List<Schedule> findByTeacherId(String teacherId);
 	List<Schedule> findByClasssId(String classId);
+	List<Schedule> findBySubjectId(int subjectId);
 
 }

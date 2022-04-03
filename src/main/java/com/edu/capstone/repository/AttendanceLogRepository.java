@@ -17,5 +17,6 @@ public interface AttendanceLogRepository extends JpaRepository<AttendanceLog, In
 	List<AttendanceLog> findBySlotId(int slotId);
 	void deleteBySlotId(int slotId);
 	AttendanceLog findBySlotIdAndStudentId(int slotId, String studentId);
+	int countBySlotId(int slotId);
 	
 }

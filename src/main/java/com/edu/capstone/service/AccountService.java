@@ -1,5 +1,6 @@
 
 package com.edu.capstone.service;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.edu.capstone.common.constant.AppConstant;
 import com.edu.capstone.common.constant.ExceptionConstant;
@@ -62,6 +64,12 @@ public class AccountService {
 	private ProfileRepository profileRepository;
 	@Autowired
 	private ClassSubjectRepository csRepo;
+	@Autowired
+	private ExcelHelper excelHelper;
+	
+	public List<Account> getAll() {
+		return accountRepository.findAll();
+	}
 
 	/**
 	 * Tìm tài khoản bằng email
@@ -112,6 +120,14 @@ public class AccountService {
 		// Gửi email, password qua gmail
 		emailService.sendMail(request.getPersonalEmail(), "Email Password nè", email + "-" + password);
 		return accountId;
+	}
+	
+	@SuppressWarnings("static-access")
+	public void importRegister(MultipartFile file) throws MessagingException, IOException {
+		List<AccountRequest> requests = excelHelper.excelToTutorials(file.getInputStream());
+		for (AccountRequest rq : requests) {
+			create(rq);
+		}
 	}
 
 	/**
