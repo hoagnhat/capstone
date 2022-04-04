@@ -50,20 +50,20 @@ public class Schedule {
 	private String status;
 	
 	@JsonIgnore
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "teacher_id", referencedColumnName = "id", insertable = true, updatable = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Account teacher;
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "subject_id", referencedColumnName = "id", insertable = true, updatable = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Subject subject;
 	
 	@JsonIgnore
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "class_id", referencedColumnName = "id", insertable = true, updatable = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)

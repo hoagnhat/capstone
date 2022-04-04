@@ -42,16 +42,16 @@ public class Classs {
 	@Column(name = "semester")
 	private int semester;
 
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "specialization_id", referencedColumnName = "id", insertable = true, updatable = true)
 	private Specialization specialization;
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@OneToMany(mappedBy = "classs", cascade = { CascadeType.MERGE })
 	private Set<Schedule> schedules = new HashSet<>();
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToMany(mappedBy = "classes", cascade = (CascadeType.MERGE))
 	private Set<Account> students = new HashSet<>();
 	

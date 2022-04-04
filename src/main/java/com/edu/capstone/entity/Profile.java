@@ -60,7 +60,7 @@ public class Profile {
 	@Column(name = "address")
 	private String address; // Địa chỉ
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@MapsId

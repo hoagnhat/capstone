@@ -45,7 +45,7 @@ public class AttendanceLog {
 	@Column(name = "description")
 	private String description;
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@OneToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "slot_id", referencedColumnName = "id", insertable = false, updatable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)

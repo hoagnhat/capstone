@@ -67,26 +67,26 @@ public class Account {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Set<Role> roles = new HashSet<>();
 
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@OneToMany(mappedBy = "account", cascade = { CascadeType.MERGE })
 	private Set<Image> images = new HashSet<>();
 
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "specialization_id", referencedColumnName = "id", insertable = true, updatable = true)
 	private Specialization specialization;
 
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToMany(cascade = (CascadeType.MERGE))
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Set<Classs> classes = new HashSet<>();
 
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@OneToMany(mappedBy = "teacher", cascade = { CascadeType.MERGE })
 	private Set<Schedule> schedules = new HashSet<>();
 	
 	@JsonIgnore
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToMany(mappedBy = "teachers", cascade = {CascadeType.REMOVE})
 	private Set<Subject> teachSubjects = new HashSet<>();
 	

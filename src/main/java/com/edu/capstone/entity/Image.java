@@ -38,7 +38,7 @@ public class Image {
 	@Column(name = "image_path")
 	private String imagePath;
 
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "account_id", referencedColumnName = "id", insertable = true, updatable = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)

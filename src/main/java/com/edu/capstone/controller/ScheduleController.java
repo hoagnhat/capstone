@@ -1,4 +1,4 @@
-package com.edu.capstone.controller;
+	package com.edu.capstone.controller;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -22,6 +22,7 @@ import com.edu.capstone.request.CreateScheduleRequest;
 import com.edu.capstone.request.ImportScheduleRequest;
 import com.edu.capstone.response.ScheResponse;
 import com.edu.capstone.response.ScheSubResponse;
+import com.edu.capstone.service.AccountService;
 import com.edu.capstone.service.ProfileService;
 import com.edu.capstone.service.ScheduleService;
 
@@ -120,6 +121,7 @@ public class ScheduleController {
 	@GetMapping("/byaccountid")
 	public List<ScheResponse> getScheduleByAccountId(@RequestParam("accountId") String accountId) {
 		List<Schedule> list = scheduleService.getByAccountId(accountId);
+		ProfileService ps = new ProfileService();
 		List<ScheResponse> responses = new ArrayList<>();
 		for (Schedule schedule : list) {
 			ClassSubject classSubject = csRepo.findById(CSKey.builder().classsId(schedule.getClasss().getId()).subjectId(schedule.getSubject().getId()).build()).get();
@@ -136,7 +138,7 @@ public class ScheduleController {
 					.timeEnd(schedule.getTimeEnd())
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
-					.teacherName(profileService.findByAccountId(accountId).getName())
+					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
 					.status(schedule.getStatus())
 					.subject(subRes)
 					.build();

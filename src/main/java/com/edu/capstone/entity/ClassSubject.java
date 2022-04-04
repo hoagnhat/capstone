@@ -33,12 +33,12 @@ public class ClassSubject {
 	private Date dateStart;
 	private Date dateEnd;
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "teacher_id", referencedColumnName = "id", insertable = true, updatable = true)
 	private Account teacher;
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "subject_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Subject subject;

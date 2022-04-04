@@ -49,18 +49,18 @@ public class Subject {
 	private int semester;
 
 	@ToString.Exclude
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private Set<Specialization> specializations = new HashSet<>();
 
 	@JsonIgnore
 	@ToString.Exclude
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@OneToMany(mappedBy = "subject", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private Set<Schedule> schedules = new HashSet<>();
 	
 	@ToString.Exclude
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToMany(cascade = { CascadeType.PERSIST })
 	private Set<Account> teachers = new HashSet<>();
 	
