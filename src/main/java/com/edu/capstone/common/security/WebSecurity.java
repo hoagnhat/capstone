@@ -38,6 +38,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 			.cors()
 			.and()
 			.csrf().disable();
+			
 		// Set unauthorized requests exception handler
 		http
 			.exceptionHandling()

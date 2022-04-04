@@ -57,20 +57,21 @@ public class AppConfig {
 		config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
 		config.setAllowedMethods(Collections.singletonList("*"));
 		config.setAllowedHeaders(Collections.singletonList("*"));
-		source.registerCorsConfiguration("/**", config);
+		config.setAllowCredentials(true);
+		source.registerCorsConfiguration("/**", config);		
 		FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
 		bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
 		return bean;
 	}
 
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				// TODO Auto-generated method stub
-				registry.addMapping("/**").allowedMethods("*").allowedHeaders("*").allowedOrigins("*");
-			}
-		};
-	}
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//		return new WebMvcConfigurer() {
+//			@Override
+//			public void addCorsMappings(CorsRegistry registry) {
+//				// TODO Auto-generated method stub
+//				registry.addMapping("/**").allowedMethods("*").allowedHeaders("*").allowedOrigins("*");
+//			}
+//		};
+//	}
 }

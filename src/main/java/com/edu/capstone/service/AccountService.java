@@ -35,6 +35,7 @@ import com.edu.capstone.entity.Classs;
 import com.edu.capstone.entity.Profile;
 import com.edu.capstone.entity.Role;
 import com.edu.capstone.entity.Specialization;
+import com.edu.capstone.entity.Subject;
 import com.edu.capstone.exception.EntityNotFoundException;
 import com.edu.capstone.repository.AccountRepository;
 import com.edu.capstone.repository.ClassSubjectRepository;
@@ -296,7 +297,7 @@ public class AccountService {
 	 * @version 1.0 - Initiation (Feb 6, 2022 by <b>NhatHH</b>)
 	 */
 	public Account getCurrentAccount() {
-		SecurityContext context = SecurityContextHolder.getContext();
+		SecurityContext context = SecurityContextHolder.getContext();		
 		Authentication authentication = context.getAuthentication();
 		String email = authentication.getName();
 		Account account = findByEmail(email);
@@ -415,20 +416,15 @@ public class AccountService {
 		List<AccountResponse> responses = new ArrayList<>();
 		List<Account> accounts = accountRepository.findAll();
 		for (Account account : accounts) {
-			List<String> roles = new ArrayList<>();
-			List<String> classs = new ArrayList<>();
+			List<String> roles = new ArrayList<>();			
 			List<String> subjects = new ArrayList<>();
+			for (Subject subject : account.getTeachSubjects()) {
+				subjects.add(subject.getSubjectCode());
+			}
 			for (Role role : account.getRoles()) {
 				if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
 					Profile profile = profileRepository.findById(account.getId()).get();
-					roles.add(role.getRoleName());
-					for (Classs sclass : account.getClasses()) {
-						classs.add(sclass.getId());
-						List<ClassSubject> csubjectss = csRepo.findByKeyClasssId(sclass.getId());
-						for (ClassSubject subject : csubjectss) {
-							subjects.add(subject.getSubject().getSubjectCode());
-						}
-					}
+					roles.add(role.getRoleName());					
 					AccountResponse response = AccountResponse.builder()
 							.accountId(account.getId())
 							.name(profile.getName())
@@ -439,8 +435,7 @@ public class AccountService {
 							.phone(profile.getPhone())
 							.email(account.getEmail())
 							.personalEmail(profile.getPersonalEmail())
-							.roles(roles)
-							.classs(classs)
+							.roles(roles)							
 							.subjects(subjects)
 							.specialization(account.getSpecialization().getName())
 							.build();
