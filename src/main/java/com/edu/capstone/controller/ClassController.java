@@ -53,7 +53,6 @@ public class ClassController {
 	private ClassRepository classRepo;
 	@Autowired
 	private ScheduleRepository scheRepo;
-	
 	@GetMapping
 	public List<ClassResponse> getAll() {
 		List<ClassResponse> responses = new ArrayList<>();
@@ -202,6 +201,31 @@ public class ClassController {
 	    return java.util.Date
 	      .from(dateToConvert.atZone(ZoneId.systemDefault())
 	      .toInstant());
+	}	
+	@GetMapping("/simple")
+	public List<ClassResponse> getClassSimple() {
+		List<ClassResponse> responses = new ArrayList<>();
+		for (Classs classs : classService.getAll()) {
+			List<ClassSubjectResponse> classSubjectResponses = new ArrayList<>();			
+			List<ClassSubject> subjects = csRepo.findByKeyClasssId(classs.getId());			
+			for (ClassSubject subject : subjects) {
+				ClassSubjectResponse classSubjectResponse = ClassSubjectResponse.builder()
+						.subjectId(subject.getSubject().getId())
+						.subjectName(subject.getSubject().getName())
+						.subjectCode(subject.getSubject().getSubjectCode())
+						.teacherName(profileService.findByAccountId(subject.getTeacher().getId()).getName())
+						.startDate(subject.getDateStart())
+						.endDate(subject.getDateEnd())
+						.build();
+				classSubjectResponses.add(classSubjectResponse);
+			}
+			ClassResponse response = ClassResponse.builder()
+					.classId(classs.getId())
+					.subjects(classSubjectResponses)
+					.semester(classs.getSemester())										
+					.build();
+			responses.add(response);
+		}
+		return responses;
 	}
-
 }

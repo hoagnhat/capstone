@@ -46,7 +46,7 @@ public class AttendanceLog {
 	private String description;
 	
 	@LazyCollection(LazyCollectionOption.TRUE)
-	@OneToOne(cascade = { CascadeType.MERGE })
+	@OneToOne(cascade = { CascadeType.MERGE }, orphanRemoval = true)
 	@JoinColumn(name = "slot_id", referencedColumnName = "id", insertable = false, updatable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Schedule schedule;

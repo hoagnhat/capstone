@@ -15,10 +15,10 @@ import com.edu.capstone.entity.AttendanceLog;
  */
 @Repository
 public interface AttendanceLogRepository extends JpaRepository<AttendanceLog, Integer> {
-	@Transactional(propagation=Propagation.SUPPORTS)
+	@Transactional(readOnly = true)
 	List<AttendanceLog> findBySlotId(int slotId);
 	void deleteBySlotId(int slotId);
-	@Transactional(propagation=Propagation.SUPPORTS)
+	@Transactional(readOnly = true)
 	AttendanceLog findBySlotIdAndStudentId(int slotId, String studentId);
 	int countBySlotId(int slotId);
 	
