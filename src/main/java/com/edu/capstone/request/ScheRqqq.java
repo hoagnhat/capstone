@@ -19,6 +19,6 @@ public class ScheRqqq {
 	private String classId;
 	private int subjectId;
 	private String teacherId;
-	private String description;
+	private String status;
 
 }

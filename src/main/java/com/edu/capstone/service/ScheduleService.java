@@ -63,7 +63,7 @@ public class ScheduleService {
 		schedule.setClasss(classService.findById(request.getClassId()));
 		schedule.setTeacher(accountService.findById(request.getTeacherId()));
 		schedule.setSubject(subjectService.findById(request.getSubjectId()));
-		schedule.setStatus(request.getStatus());
+		schedule.setStatus(request.getStatus());		
 		scheduleRepository.saveAndFlush(schedule).getId();
 	}
 	@org.springframework.transaction.annotation.Transactional(readOnly = true)
