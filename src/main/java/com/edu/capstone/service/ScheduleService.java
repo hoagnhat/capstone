@@ -151,7 +151,7 @@ public class ScheduleService {
 					cs.setDateEnd(convertToDateViaInstant(timeEnd));
 					csRepo.saveAndFlush(cs);
 				}
-				logService.importStudentIntoSlotLog(s.getId(), schedule.getClassId(), schedule.getDescription());
+				logService.importStudentIntoSlotLog(s.getId(), schedule.getClassId());
 			}
 		}
 	}
