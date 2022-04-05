@@ -48,7 +48,7 @@ public class SubjectService {
 		subjectRepository.saveAndFlush(subject);
 		return subject.getId();
 	}
-	
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public Subject findById(int subjectId) {
 		Optional<Subject> optional = subjectRepository.findById(subjectId);
 		if (!optional.isPresent()) {
@@ -56,7 +56,7 @@ public class SubjectService {
 		}
 		return optional.get();
 	}
-	
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public List<Subject> getAll() {
 		return subjectRepository.findAll();
 	}

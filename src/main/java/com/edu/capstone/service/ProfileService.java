@@ -24,6 +24,7 @@ public class ProfileService {
 	 * 
 	 * @version 1.0 - Initiation (Feb 3, 2022 by <b>NhatHH</b>)
 	 */
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public Profile findByAccountId(String accountId) {
 		Optional<Profile> optional = profileRepository.findById(accountId);
 		if (optional.isPresent()) {

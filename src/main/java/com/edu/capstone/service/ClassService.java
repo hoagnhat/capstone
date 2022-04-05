@@ -38,7 +38,7 @@ public class ClassService {
 	private SubjectService subjectService;
 	@Autowired
 	private ClassSubjectRepository csRepo;
-
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public Classs getById(String classId) {
 		Optional<Classs> optional = classRepository.findById(classId);
 		if (!optional.isPresent()) {
@@ -80,7 +80,7 @@ public class ClassService {
 		DecimalFormat df = new DecimalFormat(AppConstant.CLASS_ID_FORMAT);
 		return df.format(Double.parseDouble(number));
 	}
-
+	@org.springframework.transaction.annotation.Transactional(readOnly = false)
 	public String findLastClassId(String id) {
 		Classs classs = classRepository.findTop1ByIdIgnoreCaseContains(id, Sort.by("id").descending());
 		if (classs == null) {
@@ -88,7 +88,7 @@ public class ClassService {
 		}
 		return classs.getId();
 	}
-
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public Classs findById(String classId) {
 		Optional<Classs> optional = classRepository.findById(classId);
 		if (!optional.isPresent()) {
@@ -96,7 +96,7 @@ public class ClassService {
 		}
 		return optional.get();
 	}
-
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public List<Classs> getAll() {
 		return classRepository.findAll();
 	}

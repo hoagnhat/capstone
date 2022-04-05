@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.edu.capstone.entity.key.CSKey;
 

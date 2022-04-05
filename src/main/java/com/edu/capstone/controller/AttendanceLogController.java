@@ -58,5 +58,10 @@ public class AttendanceLogController {
 		}
 		return responses;
 	}
-
+	@GetMapping("/bySlotIdAndStudentId")
+	public LogResponse getBySlotIdAndStudentId(@RequestParam("id") int slotId, @RequestParam("studentId") String studentId) {				
+		AttendanceLog attendanceLog = logService.getBySlotIdAndStudentId(studentId, slotId);
+		LogResponse responses = LogResponse.builder().status(attendanceLog.getStatus()).description(attendanceLog.getDescription()).build();
+		return responses;
+	}
 }

@@ -35,6 +35,7 @@ public class SpecializationService {
 	 * 
 	 * @version 1.0 - Initiation (Jan 31, 2022 by <b>NhatHH</b>)
 	 */
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public Specialization findById(int id) {
 		Optional<Specialization> optional = specializationRepository.findById(id);
 		if (optional.isPresent()) {
@@ -56,6 +57,20 @@ public class SpecializationService {
 			throw new EntityNotFoundException(ExceptionConstant.SPECIALIZATION_NOT_FOUND);
 		}
 		String[] nameArray = specialization.getName().split(" "); 
+		// Get name code
+		String result = "";
+		for (int i = 0; i < nameArray.length; i++) {
+			result += nameArray[i].charAt(0);
+		}
+		return result;
+	}
+	/**
+	 * Get name code của chuyên ngành bằng name của chuyên ngành
+	 * 
+	 * @version 1.0 - Initiation (Jan 31, 2022 by <b>NhatHH</b>)
+	 */
+	public String getNameCodeBySpecName(String name) {		
+		String[] nameArray = name.split(" "); 
 		// Get name code
 		String result = "";
 		for (int i = 0; i < nameArray.length; i++) {

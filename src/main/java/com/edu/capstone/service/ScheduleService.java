@@ -66,7 +66,7 @@ public class ScheduleService {
 		schedule.setStatus(request.getStatus());
 		scheduleRepository.saveAndFlush(schedule).getId();
 	}
-	
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public List<Schedule> getGoingOnSchedule() {
 		LocalDateTime now = LocalDateTime.now();		
 		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -97,7 +97,7 @@ public class ScheduleService {
 		}
 		return result;
 	}
-	
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public List<Schedule> getUpcomingSchedule() {
 		Account current = accountService.getCurrentAccount();
 		LocalDateTime now = LocalDateTime.now();		
@@ -167,7 +167,7 @@ public class ScheduleService {
 	      .from(dateToConvert.atZone(ZoneId.systemDefault())
 	      .toInstant());
 	}
-	
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public List<Schedule> getByAccountId(String accountId) {
 		List<Schedule> schedules = new ArrayList<>();
 		List<String> roles = new ArrayList<>();
@@ -190,7 +190,7 @@ public class ScheduleService {
 		}
 		return schedules;
 	}
-	
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public List<Schedule> getByClassId(String classId) {
 		return scheduleRepository.findByClasssId(classId);
 	}

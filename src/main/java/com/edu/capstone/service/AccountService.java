@@ -1,5 +1,6 @@
 
 package com.edu.capstone.service;
+
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
@@ -49,7 +50,7 @@ import com.edu.capstone.response.AccountResponse;
  */
 @Service
 public class AccountService {
-	
+
 	private Logger logger = LoggerFactory.getLogger(AccountService.class);
 
 	@Autowired
@@ -68,7 +69,7 @@ public class AccountService {
 	private ClassSubjectRepository csRepo;
 	@Autowired
 	private ExcelHelper excelHelper;
-	
+
 	public List<Account> getAll() {
 		return accountRepository.findAll();
 	}
@@ -87,7 +88,7 @@ public class AccountService {
 	 * Tạo tài khoản mới
 	 * 
 	 * @version 1.0 - Initiation (Jan 31, 2022 by <b>NhatHH</b>)
-	 * @throws MessagingException 
+	 * @throws MessagingException
 	 */
 	public String create(AccountRequest request) throws MessagingException {
 		logger.info("Start create");
@@ -97,12 +98,8 @@ public class AccountService {
 		String avatar = request.getAvatar();
 		String address = request.getAddress();
 		// Tạo account
-		Account account = Account.builder()
-				.id(accountId)
-				.email(email)
-				.password(passwordEncoder.encode(password))
-				.isActived(1)
-				.build();
+		Account account = Account.builder().id(accountId).email(email).password(passwordEncoder.encode(password))
+				.isActived(1).build();
 		// Set chuyên ngành cho account
 		Specialization specialization = specializationService.findById(request.getSpecializationId());
 		account.setSpecialization(specialization);
@@ -114,16 +111,16 @@ public class AccountService {
 		// Update account
 		accountRepository.saveAndFlush(account);
 		// Tạo profile cho account
-		Profile profile = Profile.builder().accountId(accountId).account(account).name(request.getName().trim()).age(request.getAge())
-				.avatar(avatar != null ? avatar.trim() : null).personalEmail(request.getPersonalEmail().trim())
-				.phone(request.getPhone().trim()).gender(request.getGender())
-				.address(address != null ? address.trim() : null).build();
+		Profile profile = Profile.builder().accountId(accountId).account(account).name(request.getName().trim())
+				.age(request.getAge()).avatar(avatar != null ? avatar.trim() : null)
+				.personalEmail(request.getPersonalEmail().trim()).phone(request.getPhone().trim())
+				.gender(request.getGender()).address(address != null ? address.trim() : null).build();
 		profileRepository.saveAndFlush(profile);
 		// Gửi email, password qua gmail
 		emailService.sendMail(request.getPersonalEmail(), "Email Password nè", email + "-" + password);
 		return accountId;
 	}
-	
+
 	@SuppressWarnings("static-access")
 	public void importRegister(MultipartFile file) throws MessagingException, IOException {
 		List<AccountRequest> requests = excelHelper.excelToTutorials(file.getInputStream());
@@ -194,7 +191,7 @@ public class AccountService {
 		boolean useLetters = true;
 		boolean useNumbers = false;
 		String generatedString = RandomStringUtils.random(length, useLetters, useNumbers);
-		return generatedString; 
+		return generatedString;
 	}
 
 	/**
@@ -249,7 +246,7 @@ public class AccountService {
 		}
 		return account.getId();
 	}
-	
+
 	/**
 	 * Tìm account theo id
 	 * 
@@ -262,7 +259,7 @@ public class AccountService {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Delete account theo id
 	 * 
@@ -271,7 +268,7 @@ public class AccountService {
 	public void delete(String id) {
 		accountRepository.deleteById(id);
 	}
-	
+
 	/**
 	 * Thay đổi mật khẩu
 	 * 
@@ -285,19 +282,19 @@ public class AccountService {
 		}
 		// Check whether old password is not match with the one in database
 		if (!passwordEncoder.matches(request.getOldPassword(), current.getPassword())) {
-			throw new RuntimeException(ExceptionConstant.OLD_PASSWORD_WRONG_MSG); 
+			throw new RuntimeException(ExceptionConstant.OLD_PASSWORD_WRONG_MSG);
 		}
 		current.setPassword(passwordEncoder.encode(request.getNewPassword()));
 		accountRepository.saveAndFlush(current);
 	}
-	
+
 	/**
-	 * Get current account 
+	 * Get current account
 	 * 
 	 * @version 1.0 - Initiation (Feb 6, 2022 by <b>NhatHH</b>)
 	 */
 	public Account getCurrentAccount() {
-		SecurityContext context = SecurityContextHolder.getContext();		
+		SecurityContext context = SecurityContextHolder.getContext();
 		Authentication authentication = context.getAuthentication();
 		String email = authentication.getName();
 		Account account = findByEmail(email);
@@ -307,7 +304,7 @@ public class AccountService {
 		}
 		return account;
 	}
-	
+
 	/**
 	 * Quên mật khẩu
 	 * 
@@ -327,7 +324,7 @@ public class AccountService {
 		account.setTokenExpiredDate(LocalDateTime.now().plusMinutes(AppConstant.EXPIRED_LIMIT_TIME));
 		accountRepository.saveAndFlush(account);
 	}
-	
+
 	/**
 	 * Update password for forget password feature
 	 * 
@@ -342,7 +339,7 @@ public class AccountService {
 		current.setPassword(request.getNewPassword());
 		accountRepository.saveAndFlush(current);
 	}
-	
+
 	/**
 	 * Verify token
 	 * 
@@ -354,18 +351,18 @@ public class AccountService {
 		if (account == null) {
 			throw new EntityNotFoundException(ExceptionConstant.EMAIL_NOT_FOUND);
 		}
-		// Check whether token is expired 
+		// Check whether token is expired
 		if (!account.getTokenExpiredDate().isAfter(LocalDateTime.now())) {
 			throw new RuntimeException(ExceptionConstant.TOKEN_IS_EXPIRED_MSG);
 		} else {
-			// Check whether token is match with the one in database 
+			// Check whether token is match with the one in database
 			if (!account.getTokenExpiredDate().equals(token)) {
 				return false;
 			}
 			return true;
 		}
 	}
-	
+
 	public void inactiveAccount(List<String> accountIds) {
 		for (String id : accountIds) {
 			Account account = findById(id);
@@ -373,7 +370,7 @@ public class AccountService {
 			accountRepository.saveAndFlush(account);
 		}
 	}
-	
+
 	public List<AccountResponse> getActiveAccounts() {
 		List<AccountResponse> responses = new ArrayList<>();
 		List<Account> accounts = accountRepository.findByIsActived(1);
@@ -392,60 +389,41 @@ public class AccountService {
 					subjects.add(subject.getSubject().getSubjectCode());
 				}
 			}
-			AccountResponse response = AccountResponse.builder()
-					.accountId(account.getId())
-					.name(profile.getName())
-					.avatar(profile.getAvatar())
-					.age(profile.getAge())
-					.address(profile.getAddress())
-					.gender(profile.getGender())
-					.phone(profile.getPhone())
-					.email(account.getEmail())
-					.personalEmail(profile.getPersonalEmail())
-					.roles(roles)
-					.classs(classs)
-					.subjects(subjects)
-					.specialization(account.getSpecialization().getName())
-					.build();
+			AccountResponse response = AccountResponse.builder().accountId(account.getId()).name(profile.getName())
+					.avatar(profile.getAvatar()).age(profile.getAge()).address(profile.getAddress())
+					.gender(profile.getGender()).phone(profile.getPhone()).email(account.getEmail())
+					.personalEmail(profile.getPersonalEmail()).roles(roles).classs(classs).subjects(subjects)
+					.specialization(account.getSpecialization().getName()).build();
 			responses.add(response);
 		}
 		return responses;
 	}
-	
+
 	public List<AccountResponse> getTeachers() {
 		List<AccountResponse> responses = new ArrayList<>();
 		List<Account> accounts = accountRepository.findAll();
 		for (Account account : accounts) {
-			List<String> roles = new ArrayList<>();			
+			List<String> roles = new ArrayList<>();
 			List<String> subjects = new ArrayList<>();
 			for (Subject subject : account.getTeachSubjects()) {
 				subjects.add(subject.getSubjectCode());
 			}
 			for (Role role : account.getRoles()) {
-				if (role.getRoleName().equals(AppConstant.ROLE_TEACHER)) {
+				if (role.getRoleName().equals(AppConstant.ROLE_TEACHER) && account.getIsActived() == 1) {
 					Profile profile = profileRepository.findById(account.getId()).get();
-					roles.add(role.getRoleName());					
-					AccountResponse response = AccountResponse.builder()
-							.accountId(account.getId())
-							.name(profile.getName())
-							.avatar(profile.getAvatar())
-							.age(profile.getAge())
-							.address(profile.getAddress())
-							.gender(profile.getGender())
-							.phone(profile.getPhone())
-							.email(account.getEmail())
-							.personalEmail(profile.getPersonalEmail())
-							.roles(roles)							
-							.subjects(subjects)
-							.specialization(account.getSpecialization().getName())
-							.build();
+					roles.add(role.getRoleName());
+					AccountResponse response = AccountResponse.builder().accountId(account.getId())
+							.name(profile.getName()).avatar(profile.getAvatar()).age(profile.getAge())
+							.address(profile.getAddress()).gender(profile.getGender()).phone(profile.getPhone())
+							.email(account.getEmail()).personalEmail(profile.getPersonalEmail()).roles(roles)
+							.subjects(subjects).specialization(account.getSpecialization().getName()).build();
 					responses.add(response);
 				}
 			}
 		}
 		return responses;
 	}
-	
+
 	public List<AccountResponse> getStudents() {
 		List<AccountResponse> responses = new ArrayList<>();
 		List<Account> accounts = accountRepository.findAll();
@@ -454,7 +432,7 @@ public class AccountService {
 			List<String> classs = new ArrayList<>();
 			List<String> subjects = new ArrayList<>();
 			for (Role role : account.getRoles()) {
-				if (role.getRoleName().equals(AppConstant.ROLE_STUDENT)) {
+				if (role.getRoleName().equals(AppConstant.ROLE_STUDENT) && account.getIsActived() == 1) {
 					Profile profile = profileRepository.findById(account.getId()).get();
 					roles.add(role.getRoleName());
 					for (Classs sclass : account.getClasses()) {
@@ -464,20 +442,11 @@ public class AccountService {
 							subjects.add(subject.getSubject().getSubjectCode());
 						}
 					}
-					AccountResponse response = AccountResponse.builder()
-							.accountId(account.getId())
-							.name(profile.getName())
-							.avatar(profile.getAvatar())
-							.age(profile.getAge())
-							.address(profile.getAddress())
-							.gender(profile.getGender())
-							.phone(profile.getPhone())
-							.email(account.getEmail())
-							.personalEmail(profile.getPersonalEmail())
-							.roles(roles)
-							.classs(classs)
-							.subjects(subjects)
-							.specialization(account.getSpecialization().getName())
+					AccountResponse response = AccountResponse.builder().accountId(account.getId())
+							.name(profile.getName()).avatar(profile.getAvatar()).age(profile.getAge())
+							.address(profile.getAddress()).gender(profile.getGender()).phone(profile.getPhone())
+							.email(account.getEmail()).personalEmail(profile.getPersonalEmail()).roles(roles)
+							.classs(classs).subjects(subjects).specialization(account.getSpecialization().getName())
 							.build();
 					responses.add(response);
 				}
