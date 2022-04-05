@@ -18,6 +18,7 @@ import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.entity.key.CSKey;
 import com.edu.capstone.repository.ClassSubjectRepository;
+import com.edu.capstone.repository.ProfileRepository;
 import com.edu.capstone.request.CreateScheduleRequest;
 import com.edu.capstone.request.ImportScheduleRequest;
 import com.edu.capstone.response.ScheResponse;
@@ -35,25 +36,18 @@ public class ScheduleController {
 	@Autowired
 	private ProfileService profileService;
 	@Autowired
-	private ClassSubjectRepository csRepo;
+	private ProfileRepository profileRepo; 
 	
 	@GetMapping("/ongoing")
 	public List<ScheResponse> getOnGoingSchedule() {
 		List<Schedule> schedules = scheduleService.getGoingOnSchedule();
 		List<ScheResponse> responses = new ArrayList<>();
-		for (Schedule schedule : schedules) {			
-			ClassSubject classSubject = csRepo.findByKeyClasssIdAndKeySubjectId(schedule.getClasss().getId(), schedule.getSubject().getId());
+		for (Schedule schedule : schedules) {						
 			ScheSubResponse subRes = ScheSubResponse.builder()
 					.id(schedule.getSubject().getId())
 					.name(schedule.getSubject().getName())
 					.code(schedule.getSubject().getSubjectCode())
-					.build();
-			if (classSubject.getDateStart() != null) {
-				subRes.setStartDate(classSubject.getDateStart());
-			}
-			if (classSubject.getDateEnd() != null) {
-				subRes.setEndDate(classSubject.getDateEnd());
-			}
+					.build();			
 			ScheResponse response = ScheResponse.builder()
 					.id(schedule.getId())
 					.timeStart(schedule.getTimeStart())
@@ -75,19 +69,12 @@ public class ScheduleController {
 	public List<ScheResponse> getUpcomingSchedule() {
 		List<Schedule> schedules = scheduleService.getUpcomingSchedule();
 		List<ScheResponse> responses = new ArrayList<>();
-		for (Schedule schedule : schedules) {
-			ClassSubject classSubject = csRepo.findByKeyClasssIdAndKeySubjectId(schedule.getClasss().getId(), schedule.getSubject().getId());
+		for (Schedule schedule : schedules) {			
 			ScheSubResponse subRes = ScheSubResponse.builder()
 					.id(schedule.getSubject().getId())
 					.name(schedule.getSubject().getName())
 					.code(schedule.getSubject().getSubjectCode())
-					.build();
-			if (classSubject.getDateStart() != null) {
-				subRes.setStartDate(classSubject.getDateStart());
-			}
-			if (classSubject.getDateEnd() != null) {
-				subRes.setEndDate(classSubject.getDateEnd());
-			}
+					.build();			
 			ScheResponse response = ScheResponse.builder()
 					.id(schedule.getId())
 					.timeStart(schedule.getTimeStart())
@@ -121,16 +108,12 @@ public class ScheduleController {
 	@GetMapping("/byaccountid")
 	public List<ScheResponse> getScheduleByAccountId(@RequestParam("accountId") String accountId) {
 		List<Schedule> list = scheduleService.getByAccountId(accountId);
-		ProfileService ps = new ProfileService();
 		List<ScheResponse> responses = new ArrayList<>();
-		for (Schedule schedule : list) {
-			ClassSubject classSubject = csRepo.findById(CSKey.builder().classsId(schedule.getClasss().getId()).subjectId(schedule.getSubject().getId()).build()).get();
+		for (Schedule schedule : list) {						
 			ScheSubResponse subRes = ScheSubResponse.builder()
 					.id(schedule.getSubject().getId())
 					.name(schedule.getSubject().getName())
-					.code(schedule.getSubject().getSubjectCode())
-					.startDate(classSubject.getDateStart())
-					.endDate(classSubject.getDateEnd())
+					.code(schedule.getSubject().getSubjectCode())					
 					.build();
 			ScheResponse response = ScheResponse.builder()
 					.id(schedule.getId())
@@ -138,7 +121,7 @@ public class ScheduleController {
 					.timeEnd(schedule.getTimeEnd())
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
-					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
+					.teacherName(profileRepo.getById(schedule.getTeacher().getId()).getName())
 					.status(schedule.getStatus())
 					.subject(subRes)
 					.build();
@@ -151,14 +134,11 @@ public class ScheduleController {
 	public List<ScheResponse> getScheduleByClassId(@RequestParam("classId") String classId) {
 		List<Schedule> list = scheduleService.getByClassId(classId);
 		List<ScheResponse> responses = new ArrayList<>();
-		for (Schedule schedule : list) {
-			ClassSubject classSubject = csRepo.findById(CSKey.builder().classsId(schedule.getClasss().getId()).subjectId(schedule.getSubject().getId()).build()).get();
+		for (Schedule schedule : list) {			
 			ScheSubResponse subRes = ScheSubResponse.builder()
 					.id(schedule.getSubject().getId())
 					.name(schedule.getSubject().getName())
-					.code(schedule.getSubject().getSubjectCode())
-					.startDate(classSubject.getDateStart())
-					.endDate(classSubject.getDateEnd())
+					.code(schedule.getSubject().getSubjectCode())					
 					.build();
 			ScheResponse response = ScheResponse.builder()
 					.id(schedule.getId())
@@ -166,7 +146,7 @@ public class ScheduleController {
 					.timeEnd(schedule.getTimeEnd())
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
-					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
+					.teacherName(profileRepo.getById(schedule.getTeacher().getId()).getName())
 					.status(schedule.getStatus())
 					.subject(subRes)
 					.build();

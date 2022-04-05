@@ -12,7 +12,7 @@ import com.edu.capstone.entity.Profile;
  * Date: Feb 2, 2022
  */
 @Repository
-@Transactional(propagation=Propagation.SUPPORTS)
+@Transactional(readOnly = true)
 public interface ProfileRepository extends JpaRepository<Profile, String> {
 
 }
