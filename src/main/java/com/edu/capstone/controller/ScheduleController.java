@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.capstone.entity.ClassSubject;
+import com.edu.capstone.entity.Profile;
 import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.entity.key.CSKey;
 import com.edu.capstone.repository.ClassSubjectRepository;
@@ -108,8 +109,15 @@ public class ScheduleController {
 	@GetMapping("/byaccountid")
 	public List<ScheResponse> getScheduleByAccountId(@RequestParam("accountId") String accountId) {
 		List<Schedule> list = scheduleService.getByAccountId(accountId);
+		List<Profile> profiles = profileRepo.findAll();
+		String teacherName = "";
 		List<ScheResponse> responses = new ArrayList<>();
-		for (Schedule schedule : list) {						
+		for (Schedule schedule : list) {			
+			for (Profile profile : profiles) {
+				if(profile.getAccount().getId() == schedule.getTeacher().getId()) {
+					teacherName = profile.getName();
+				}
+			}
 			ScheSubResponse subRes = ScheSubResponse.builder()
 					.id(schedule.getSubject().getId())
 					.name(schedule.getSubject().getName())
@@ -121,7 +129,7 @@ public class ScheduleController {
 					.timeEnd(schedule.getTimeEnd())
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
-					.teacherName(profileRepo.getById(schedule.getTeacher().getId()).getName())
+					.teacherName(teacherName)
 					.status(schedule.getStatus())
 					.subject(subRes)
 					.build();
@@ -132,9 +140,16 @@ public class ScheduleController {
 	
 	@GetMapping("/byclassid")
 	public List<ScheResponse> getScheduleByClassId(@RequestParam("classId") String classId) {
+		List<Profile> profiles = profileRepo.findAll();
 		List<Schedule> list = scheduleService.getByClassId(classId);
+		String teacherName = "";
 		List<ScheResponse> responses = new ArrayList<>();
-		for (Schedule schedule : list) {			
+		for (Schedule schedule : list) {	
+			for (Profile profile : profiles) {
+				if(profile.getAccount().getId() == schedule.getTeacher().getId()) {
+					teacherName = profile.getName();
+				}
+			}
 			ScheSubResponse subRes = ScheSubResponse.builder()
 					.id(schedule.getSubject().getId())
 					.name(schedule.getSubject().getName())
@@ -146,7 +161,7 @@ public class ScheduleController {
 					.timeEnd(schedule.getTimeEnd())
 					.room(schedule.getRoom())
 					.classId(schedule.getClasss().getId())
-					.teacherName(profileRepo.getById(schedule.getTeacher().getId()).getName())
+					.teacherName(teacherName)
 					.status(schedule.getStatus())
 					.subject(subRes)
 					.build();
