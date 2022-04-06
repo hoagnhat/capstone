@@ -8,6 +8,7 @@ import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -19,6 +20,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Fetch;
@@ -47,7 +49,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Cacheable
-@EqualsAndHashCode(exclude = {"schedules", "classes"})
+@EqualsAndHashCode(exclude = { "schedules", "classes" })
 public class Account {
 
 	@Id
@@ -67,35 +69,35 @@ public class Account {
 	@Column(name = "token_expired_date")
 	private LocalDateTime tokenExpiredDate;
 
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToMany(cascade = { CascadeType.MERGE })
+	@ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@Fetch(FetchMode.SUBSELECT)
+	@Fetch(value = FetchMode.SUBSELECT)
 	private Set<Role> roles = new HashSet<>();
 
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@OneToMany(mappedBy = "account", cascade = { CascadeType.MERGE })
-	private Set<Image> images = new HashSet<>();
+//	@OneToMany(mappedBy = "account", cascade = { CascadeType.MERGE },fetch = FetchType.LAZY)
+//	private Set<Image> images = new HashSet<>();
 
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToOne(cascade = { CascadeType.MERGE })
+	@ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "specialization_id", referencedColumnName = "id", insertable = true, updatable = true)
 	private Specialization specialization;
 
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToMany(cascade = (CascadeType.MERGE))
+	@ManyToMany(cascade = (CascadeType.MERGE), fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@Fetch(value = FetchMode.SELECT)
+	@BatchSize(size = 50)
 	private Set<Classs> classes = new HashSet<>();
 
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@OneToMany(mappedBy = "teacher", cascade = { CascadeType.MERGE })
+	@OneToMany(mappedBy = "teacher", cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@Fetch(value = FetchMode.SELECT)
+	@BatchSize(size = 100)
 	private Set<Schedule> schedules = new HashSet<>();
-	
+
 	@JsonIgnore
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToMany(mappedBy = "teachers", cascade = {CascadeType.REMOVE})
+	@ManyToMany(mappedBy = "teachers", cascade = { CascadeType.REMOVE }, fetch = FetchType.LAZY)
+	@Fetch(value = FetchMode.SELECT)
+	@BatchSize(size = 50)
 	private Set<Subject> teachSubjects = new HashSet<>();
-	
+
 	public void addSubjects(Subject subject) {
 		if (teachSubjects == null) {
 			teachSubjects = new HashSet<>();
@@ -111,7 +113,7 @@ public class Account {
 		teachSubjects.remove(subject);
 		subject.getTeachers().remove(this);
 	}
-	
+
 	public void addSchedule(Schedule schedule) {
 		if (schedules == null) {
 			schedules = new HashSet<>();
@@ -127,9 +129,10 @@ public class Account {
 		schedules.remove(schedule);
 		schedule.setTeacher(null);
 	}
-	
+
 	public void removeClass(Classs classs) {
-		if (classes == null) classes = new HashSet<>();
+		if (classes == null)
+			classes = new HashSet<>();
 		classes.remove(classs);
 		classs.getStudents().remove(this);
 	}

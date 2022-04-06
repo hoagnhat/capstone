@@ -7,6 +7,7 @@ import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -14,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -45,21 +47,19 @@ public class Classs {
 	private String id;
 	@Column(name = "semester")
 	private int semester;
-
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToOne(cascade = { CascadeType.MERGE })
-	@JoinColumn(name = "specialization_id", referencedColumnName = "id", insertable = true, updatable = true)
-	@Fetch(FetchMode.JOIN)
+	
+	@ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "specialization_id", referencedColumnName = "id", insertable = true, updatable = true)	
 	private Specialization specialization;
 	
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@OneToMany(mappedBy = "classs", cascade = { CascadeType.MERGE })
+	
+	@OneToMany(mappedBy = "classs", cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@Fetch(FetchMode.SUBSELECT)
 	private Set<Schedule> schedules = new HashSet<>();
 	
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToMany(mappedBy = "classes", cascade = (CascadeType.MERGE))
-	@Fetch(FetchMode.SUBSELECT)
+	
+	@ManyToMany(mappedBy = "classes", cascade = (CascadeType.MERGE), fetch = FetchType.LAZY)
+	@Fetch(FetchMode.SUBSELECT)	
 	private Set<Account> students = new HashSet<>();
 	
 	public void addStudent(Account teacher) {

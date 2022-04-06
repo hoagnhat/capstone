@@ -7,6 +7,7 @@ import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -50,20 +53,18 @@ public class Subject {
 	@Column(name = "semester")
 	private int semester;
 
-	@ToString.Exclude
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@ToString.Exclude	
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE },fetch = FetchType.LAZY)
+	@Fetch(FetchMode.SUBSELECT)
 	private Set<Specialization> specializations = new HashSet<>();
 
 	@JsonIgnore
-	@ToString.Exclude
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@OneToMany(mappedBy = "subject", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@ToString.Exclude	
+	@OneToMany(mappedBy = "subject", cascade = { CascadeType.PERSIST, CascadeType.REMOVE },fetch = FetchType.LAZY)
 	private Set<Schedule> schedules = new HashSet<>();
 	
-	@ToString.Exclude
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToMany(cascade = { CascadeType.PERSIST })
+	@ToString.Exclude	
+	@ManyToMany(cascade = { CascadeType.PERSIST },fetch = FetchType.LAZY)
 	private Set<Account> teachers = new HashSet<>();
 	
 	public void addSchedule(Schedule schedule) {

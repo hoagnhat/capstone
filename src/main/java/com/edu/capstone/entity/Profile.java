@@ -3,6 +3,7 @@ package com.edu.capstone.entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
@@ -11,6 +12,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.OnDelete;
@@ -59,10 +62,10 @@ public class Profile {
 	private int gender; // Giới tính (0: Nam, 1: Nữ)
 	@Column(name = "address")
 	private String address; // Địa chỉ
-	
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+		
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE },fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@Fetch(FetchMode.SELECT)
 	@MapsId
 	private Account account;
 

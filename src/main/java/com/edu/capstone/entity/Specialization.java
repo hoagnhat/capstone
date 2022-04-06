@@ -52,7 +52,7 @@ public class Specialization {
 	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToMany(mappedBy = "specializations", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@Fetch(FetchMode.SUBSELECT)
+	@Fetch(FetchMode.SUBSELECT)	
 	private Set<Subject> subjects = new HashSet<>();
 	
 	public void addSubjects(Subject subject) {

@@ -3,6 +3,7 @@ package com.edu.capstone.entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,9 +45,8 @@ public class AttendanceLog {
 	private int slotId;
 	@Column(name = "description")
 	private String description;
-	
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@OneToOne(cascade = { CascadeType.MERGE }, orphanRemoval = true)
+		
+	@OneToOne(cascade = { CascadeType.MERGE }, orphanRemoval = true,fetch = FetchType.LAZY)
 	@JoinColumn(name = "slot_id", referencedColumnName = "id", insertable = false, updatable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Schedule schedule;

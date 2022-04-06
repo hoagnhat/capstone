@@ -7,6 +7,7 @@ import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,8 +29,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author NhatHH
- * Date: Feb 19, 2022
+ * @author NhatHH Date: Feb 19, 2022
  */
 @Entity
 @Table(name = "[SCHEDULE]")
@@ -39,7 +39,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Cacheable
 public class Schedule {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -51,25 +51,22 @@ public class Schedule {
 	private int room;
 	@Column(name = "status")
 	private String status;
-	
+
 	@JsonIgnore
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToOne(cascade = { CascadeType.MERGE })
+	@ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "teacher_id", referencedColumnName = "id", insertable = true, updatable = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Account teacher;
-	
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToOne(cascade = { CascadeType.MERGE })
+
+	@ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "subject_id", referencedColumnName = "id", insertable = true, updatable = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Subject subject;
-	
+
 	@JsonIgnore
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToOne(cascade = { CascadeType.MERGE })
+	@ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "class_id", referencedColumnName = "id", insertable = true, updatable = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Classs classs;
-	
+
 }

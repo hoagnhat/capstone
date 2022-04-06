@@ -402,21 +402,21 @@ public class AccountService {
 	public List<AccountResponse> getTeachers() {
 		List<AccountResponse> responses = new ArrayList<>();
 		List<Account> accounts = accountRepository.findAll();
+		List<Profile> profiles = profileRepository.findAll();
 		for (Account account : accounts) {
 			List<String> roles = new ArrayList<>();
-			List<String> subjects = new ArrayList<>();
-			for (Subject subject : account.getTeachSubjects()) {
-				subjects.add(subject.getSubjectCode());
-			}
+			List<String> subjects = account.getTeachSubjects().stream().map(c -> c.getSubjectCode()).toList();			
 			for (Role role : account.getRoles()) {
 				if (role.getRoleName().equals(AppConstant.ROLE_TEACHER) && account.getIsActived() == 1) {
-					Profile profile = profileRepository.findById(account.getId()).get();
+					Profile profile = profiles.stream().filter(p -> p.getAccountId().equals(account.getId()))
+							.findFirst().orElse(null);
 					roles.add(role.getRoleName());
 					AccountResponse response = AccountResponse.builder().accountId(account.getId())
 							.name(profile.getName()).avatar(profile.getAvatar()).age(profile.getAge())
 							.address(profile.getAddress()).gender(profile.getGender()).phone(profile.getPhone())
 							.email(account.getEmail()).personalEmail(profile.getPersonalEmail()).roles(roles)
-							.subjects(subjects).specialization(account.getSpecialization().getName()).build();
+							.subjects(subjects).specialization(account.getSpecialization().getName())
+							.build();
 					responses.add(response);
 				}
 			}
@@ -427,26 +427,20 @@ public class AccountService {
 	public List<AccountResponse> getStudents() {
 		List<AccountResponse> responses = new ArrayList<>();
 		List<Account> accounts = accountRepository.findAll();
+		List<Profile> profiles = profileRepository.findAll();
 		for (Account account : accounts) {
 			List<String> roles = new ArrayList<>();
-			List<String> classs = new ArrayList<>();
-			List<String> subjects = new ArrayList<>();
+			List<String> classs = account.getClasses().stream().map(c -> c.getId()).toList();			
 			for (Role role : account.getRoles()) {
 				if (role.getRoleName().equals(AppConstant.ROLE_STUDENT) && account.getIsActived() == 1) {
-					Profile profile = profileRepository.findById(account.getId()).get();
+					Profile profile = profiles.stream().filter(p -> p.getAccountId().equals(account.getId()))
+							.findFirst().orElse(null);
 					roles.add(role.getRoleName());
-					for (Classs sclass : account.getClasses()) {
-						classs.add(sclass.getId());
-						List<ClassSubject> csubjectss = csRepo.findByKeyClasssId(sclass.getId());
-						for (ClassSubject subject : csubjectss) {
-							subjects.add(subject.getSubject().getSubjectCode());
-						}
-					}
 					AccountResponse response = AccountResponse.builder().accountId(account.getId())
 							.name(profile.getName()).avatar(profile.getAvatar()).age(profile.getAge())
 							.address(profile.getAddress()).gender(profile.getGender()).phone(profile.getPhone())
 							.email(account.getEmail()).personalEmail(profile.getPersonalEmail()).roles(roles)
-							.classs(classs).subjects(subjects).specialization(account.getSpecialization().getName())
+							.classs(classs).specialization(account.getSpecialization().getName())
 							.build();
 					responses.add(response);
 				}

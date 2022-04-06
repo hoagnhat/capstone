@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
@@ -33,15 +34,13 @@ public class ClassSubject {
 	private CSKey key;
 	private Date dateStart;
 	private Date dateEnd;
-	
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToOne(cascade = { CascadeType.MERGE })
+
+	@ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)	
 	@JoinColumn(name = "teacher_id", referencedColumnName = "id", insertable = true, updatable = true)
 	private Account teacher;
 	
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToOne(cascade = { CascadeType.MERGE })
+	@ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "subject_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Subject subject;
-	
+
 }

@@ -26,6 +26,7 @@ import com.edu.capstone.entity.key.CSKey;
 import com.edu.capstone.repository.AccountRepository;
 import com.edu.capstone.repository.ClassRepository;
 import com.edu.capstone.repository.ClassSubjectRepository;
+import com.edu.capstone.repository.ProfileRepository;
 import com.edu.capstone.repository.ScheduleRepository;
 import com.edu.capstone.request.AddCourseForClassRequest;
 import com.edu.capstone.request.AddStudentIntoClassRequest;
@@ -53,9 +54,11 @@ public class ClassController {
 	private ClassRepository classRepo;
 	@Autowired
 	private ScheduleRepository scheRepo;
+	@Autowired
+	private ProfileRepository profileRepository;
 	@GetMapping
 	public List<ClassResponse> getAll() {
-		List<ClassResponse> responses = new ArrayList<>();
+		List<ClassResponse> responses = new ArrayList<>();		
 		for (Classs classs : classService.getAll()) {
 			List<ClassSubjectResponse> classSubjectResponses = new ArrayList<>();
 			List<StudentResponse> students = new ArrayList<>();
@@ -101,11 +104,12 @@ public class ClassController {
 	@GetMapping("/{id}")
 	public ClassResponse getById(@PathVariable("id") String id) {
 		Classs classs = classService.findById(id);
+		List<Profile> profiles = profileRepository.findAll();
 		List<ClassSubjectResponse> classSubjectResponses = new ArrayList<>();
 		List<StudentResponse> students = new ArrayList<>();
 		List<ClassSubject> subjects = csRepo.findByKeyClasssId(classs.getId());
 		for (Account student : classs.getStudents()) {
-			Profile profile = profileService.findByAccountId(student.getId());
+			Profile profile = profiles.stream().filter(p -> p.getAccountId().equals(student.getId())).findFirst().orElse(null);
 			StudentResponse studentResponse = StudentResponse.builder()
 					.accountId(student.getId())
 					.name(profile.getName())
