@@ -54,7 +54,7 @@ public class SubjectController {
 		List<SubjectResponse> responses = new ArrayList<>();
 		for (Subject subject : subjects) {
 			List<StudentResponse> teachers = new ArrayList<>();
-			List<String> classes = new ArrayList<>();
+//			List<String> classes = new ArrayList<>();
 //			for (ClassSubject cs : csRepo.findByKeySubjectId(subject.getId())) {
 //				classes.add(cs.getKey().getClasssId());
 //			}
@@ -77,7 +77,7 @@ public class SubjectController {
 			}
 			response.setSpecializations(specNameList);
 			response.setTeachers(teachers);
-			response.setClasses(classes);
+//			response.setClasses(classes);
 			responses.add(response);
 		}
 		return responses; 
@@ -88,6 +88,10 @@ public class SubjectController {
 	public SubjectResponse getById(@RequestParam("id") int id) {
 		Subject subject = subjectService.findById(id);
 		List<StudentResponse> teachers = new ArrayList<>();
+		List<String> classes = new ArrayList<>();
+		for (ClassSubject cs : csRepo.findByKeySubjectId(subject.getId())) {
+			classes.add(cs.getKey().getClasssId());
+		}
 		for (Account teacher : subject.getTeachers()) {
 			Profile profile = profileService.findByAccountId(teacher.getId());
 			StudentResponse teacherResponse = StudentResponse.builder()					
@@ -100,6 +104,7 @@ public class SubjectController {
 				.name(subject.getName())
 				.semester(subject.getSemester())
 				.subjectCode(subject.getSubjectCode())
+				.classes(classes)
 				.build();
 //		List<String> specNameList = new ArrayList<>();
 //		for (Specialization spec : subject.getSpecializations()) {
