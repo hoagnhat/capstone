@@ -51,62 +51,64 @@ public class SpecializationController {
 		List<SpecResponse> responses = new ArrayList<>();
 		List<Specialization> specializations = specService.getAll();				
 		for (Specialization spec : specializations) {
-			Set<String> subjectsss = new HashSet<>();	
-			int studentCounts = 0;
-			Set<Subject> subjects = spec.getSubjects();
-			List<Classs> classes = classRepo.findBySpecializationId(spec.getId());
-			Set<String> classIds = new HashSet<String>();			
-//			List<Account> students = accountRepo.findBySpecialization_id(spec.getId());
+//			Set<String> subjectsss = new HashSet<>();	
+//			int studentCounts = 0;
+//			Set<Subject> subjects = spec.getSubjects();
+//			List<Classs> classes = classRepo.findBySpecializationId(spec.getId());
+//			Set<String> classIds = new HashSet<String>();			
+//			List<Account> students = accountRepo.findBySpecializationId(spec.getId());
 //			for (Account student : students) {
 //				if(student.getRoles().iterator().next().getRoleName().equalsIgnoreCase("ROLE_STUDENT")) {
 //					studentCounts++;
 //				}
 //			}	
-			for (Classs classs : classes) {
-				classIds.add(classs.getId());
-			}
-			for (Subject sub : subjects) {
-				subjectsss.add(sub.getSubjectCode());
-			}
+//			for (Classs classs : classes) {
+//				classIds.add(classs.getId());
+//			}
+//			for (Subject sub : subjects) {
+//				subjectsss.add(sub.getSubjectCode());
+//			}
 			SpecResponse response = SpecResponse.builder()
 					.specId(spec.getId())
 					.name(spec.getName())
-					.classes(classIds)
-					.studentCounts(studentCounts)
-					.subjects(subjectsss)
+//					.classes(classIds)
+//					.studentCounts(studentCounts)
+//					.subjects(subjectsss)
 					.build();
 			responses.add(response);
 		}
 		return responses;
 	}
 
-//	@GetMapping("/{id}")
-//	public SpecResponse getById(@RequestParam("id") int id) {
-//		Specialization spec = specService.findById(id);
-//		Set<Subject> subjects = spec.getSubjects();
-//		Set<String> teachers = new HashSet<>();
-//		Set<String> students = new HashSet<>();
-//		Set<String> subjectsss = new HashSet<>();
-//		for (Subject sub : subjects) {
-//			List<Schedule> schedules = scheRepo.findBySubjectId(sub.getId());
-//			for (Schedule sc : schedules) {
-//				teachers.add(sc.getTeacher().getId());
-//				List<AttendanceLog> logs = logRepo.findBySlotId(sc.getId());
-//				for (AttendanceLog log : logs) {
-//					students.add(log.getStudentId());
-//				}
-//			}
-//			subjectsss.add(sub.getSubjectCode());
-//		}
-//		SpecResponse response = SpecResponse.builder()
-//				.specId(spec.getId())
-//				.name(spec.getName())
-//				.teacherCounts(teachers.size())
-//				.studentCounts(students.size())
-//				.subjects(subjectsss)
-//				.build();
-//		return response;
-//	}
+	@GetMapping("/{id}")
+	public SpecResponse getById(@RequestParam("id") int id) {
+		Specialization spec = specService.findById(id);
+		Set<Subject> subjects = spec.getSubjects();
+		Set<String> subjectsss = new HashSet<>();	
+		int studentCounts = 0;		
+		List<Classs> classes = classRepo.findBySpecializationId(spec.getId());
+		Set<String> classIds = new HashSet<String>();			
+		List<Account> students = accountRepo.findBySpecializationId(spec.getId());
+		for (Account student : students) {
+			if(student.getRoles().iterator().next().getRoleName().equalsIgnoreCase("ROLE_STUDENT")) {
+				studentCounts++;
+			}
+		}	
+		for (Classs classs : classes) {
+			classIds.add(classs.getId());
+		}
+		for (Subject sub : subjects) {
+			subjectsss.add(sub.getSubjectCode());
+		}
+		SpecResponse response = SpecResponse.builder()
+				.specId(spec.getId())
+				.name(spec.getName())
+				.classes(classIds)
+				.studentCounts(studentCounts)
+				.subjects(subjectsss)
+				.build();
+		return response;
+	}
 
 	@PostMapping
 	public void create(@RequestBody CreateSpecRequest request) {

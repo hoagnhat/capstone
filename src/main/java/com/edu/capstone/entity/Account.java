@@ -21,6 +21,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.OnDelete;
@@ -68,6 +70,7 @@ public class Account {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToMany(cascade = { CascadeType.MERGE })
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@Fetch(FetchMode.SUBSELECT)
 	private Set<Role> roles = new HashSet<>();
 
 	@LazyCollection(LazyCollectionOption.TRUE)

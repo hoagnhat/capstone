@@ -59,33 +59,33 @@ public class ClassController {
 		for (Classs classs : classService.getAll()) {
 			List<ClassSubjectResponse> classSubjectResponses = new ArrayList<>();
 			List<StudentResponse> students = new ArrayList<>();
-			List<ClassSubject> subjects = csRepo.findByKeyClasssId(classs.getId());
-			for (Account student : classs.getStudents()) {
-				Profile profile = profileService.findByAccountId(student.getId());
-				StudentResponse studentResponse = StudentResponse.builder()
-						.accountId(student.getId())
-						.name(profile.getName())
-						.avatar(profile.getAvatar())
-						.phone(profile.getPhone())
-						.age(profile.getAge())
-						.gender(profile.getGender())
-						.address(profile.getAddress())
-						.email(student.getEmail())
-						.personalEmail(profile.getPersonalEmail())
-						.build();
-				students.add(studentResponse);
-			}
-			for (ClassSubject subject : subjects) {
-				ClassSubjectResponse classSubjectResponse = ClassSubjectResponse.builder()
-						.subjectId(subject.getSubject().getId())
-						.subjectName(subject.getSubject().getName())
-						.subjectCode(subject.getSubject().getSubjectCode())
-						.teacherName(profileService.findByAccountId(subject.getTeacher().getId()).getName())
-						.startDate(subject.getDateStart())
-						.endDate(subject.getDateEnd())
-						.build();
-				classSubjectResponses.add(classSubjectResponse);
-			}
+//			List<ClassSubject> subjects = csRepo.findByKeyClasssId(classs.getId());
+//			for (Account student : classs.getStudents()) {
+//				Profile profile = profileService.findByAccountId(student.getId());
+//				StudentResponse studentResponse = StudentResponse.builder()
+//						.accountId(student.getId())
+//						.name(profile.getName())
+//						.avatar(profile.getAvatar())
+//						.phone(profile.getPhone())
+//						.age(profile.getAge())
+//						.gender(profile.getGender())
+//						.address(profile.getAddress())
+//						.email(student.getEmail())
+//						.personalEmail(profile.getPersonalEmail())
+//						.build();
+//				students.add(studentResponse);
+//			}
+//			for (ClassSubject subject : subjects) {
+//				ClassSubjectResponse classSubjectResponse = ClassSubjectResponse.builder()
+//						.subjectId(subject.getSubject().getId())
+//						.subjectName(subject.getSubject().getName())
+//						.subjectCode(subject.getSubject().getSubjectCode())
+//						.teacherName(profileService.findByAccountId(subject.getTeacher().getId()).getName())
+//						.startDate(subject.getDateStart())
+//						.endDate(subject.getDateEnd())
+//						.build();
+//				classSubjectResponses.add(classSubjectResponse);
+//			}
 			ClassResponse response = ClassResponse.builder()
 					.classId(classs.getId())
 					.subjects(classSubjectResponses)

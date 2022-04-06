@@ -14,6 +14,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -50,6 +52,7 @@ public class Specialization {
 	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToMany(mappedBy = "specializations", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@Fetch(FetchMode.SUBSELECT)
 	private Set<Subject> subjects = new HashSet<>();
 	
 	public void addSubjects(Subject subject) {

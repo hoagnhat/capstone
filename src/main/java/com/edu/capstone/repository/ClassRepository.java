@@ -19,5 +19,6 @@ import com.edu.capstone.entity.Classs;
 public interface ClassRepository extends JpaRepository<Classs, String> {
 	
 	Classs findTop1ByIdIgnoreCaseContains(String id, Sort sort);
+	@Query("SELECT c FROM Classs c join fetch c.specialization spec WHERE spec.id = ?1")
 	List<Classs> findBySpecializationId(int id);
 }

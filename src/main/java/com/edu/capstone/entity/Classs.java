@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.OnDelete;
@@ -47,14 +49,17 @@ public class Classs {
 	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "specialization_id", referencedColumnName = "id", insertable = true, updatable = true)
+	@Fetch(FetchMode.JOIN)
 	private Specialization specialization;
 	
 	@LazyCollection(LazyCollectionOption.TRUE)
 	@OneToMany(mappedBy = "classs", cascade = { CascadeType.MERGE })
+	@Fetch(FetchMode.SUBSELECT)
 	private Set<Schedule> schedules = new HashSet<>();
 	
 	@LazyCollection(LazyCollectionOption.TRUE)
 	@ManyToMany(mappedBy = "classes", cascade = (CascadeType.MERGE))
+	@Fetch(FetchMode.SUBSELECT)
 	private Set<Account> students = new HashSet<>();
 	
 	public void addStudent(Account teacher) {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,5 +23,7 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 	Account findTop1ByEmailIgnoreCaseContainsOrderByEmailDesc(String email);
 	Account findTop1ByIdIgnoreCaseContains(String id, Sort sort);
 	List<Account> findByIsActived(int isActived);
-	List<Account> findBySpecialization_id(int specId);	
+	@Transactional(readOnly = true)
+	@Query("SELECT account FROM Account account join fetch account.specialization spec WHERE spec.id = ?1")
+	List<Account> findBySpecializationId(int specId);	
 }
