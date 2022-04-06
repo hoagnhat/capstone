@@ -94,7 +94,8 @@ public class SubjectController {
 		}
 		for (Account teacher : subject.getTeachers()) {
 			Profile profile = profileService.findByAccountId(teacher.getId());
-			StudentResponse teacherResponse = StudentResponse.builder()					
+			StudentResponse teacherResponse = StudentResponse.builder()
+					.accountId(profile.getAccountId())
 					.name(profile.getName())					
 					.build();
 			teachers.add(teacherResponse);

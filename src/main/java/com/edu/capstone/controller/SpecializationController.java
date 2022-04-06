@@ -54,14 +54,14 @@ public class SpecializationController {
 			Set<String> subjectsss = new HashSet<>();	
 			int studentCounts = 0;
 			Set<Subject> subjects = spec.getSubjects();
-			List<Classs> classes = classRepo.findBySpecialization_id(spec.getId());
+			List<Classs> classes = classRepo.findBySpecializationId(spec.getId());
 			Set<String> classIds = new HashSet<String>();			
-			List<Account> students = accountRepo.findBySpecialization_id(spec.getId());
-			for (Account student : students) {
-				if(student.getRoles().iterator().next().getRoleName().equalsIgnoreCase("ROLE_STUDENT")) {
-					studentCounts++;
-				}
-			}	
+//			List<Account> students = accountRepo.findBySpecialization_id(spec.getId());
+//			for (Account student : students) {
+//				if(student.getRoles().iterator().next().getRoleName().equalsIgnoreCase("ROLE_STUDENT")) {
+//					studentCounts++;
+//				}
+//			}	
 			for (Classs classs : classes) {
 				classIds.add(classs.getId());
 			}
