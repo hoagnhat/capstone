@@ -90,10 +90,8 @@ public class SubjectController {
 		List<StudentResponse> teachers = new ArrayList<>();
 		for (Account teacher : subject.getTeachers()) {
 			Profile profile = profileService.findByAccountId(teacher.getId());
-			StudentResponse teacherResponse = StudentResponse.builder()
-					.accountId(teacher.getId())
-					.name(profile.getName())
-					.avatar(profile.getAvatar())
+			StudentResponse teacherResponse = StudentResponse.builder()					
+					.name(profile.getName())					
 					.build();
 			teachers.add(teacherResponse);
 		}
@@ -103,11 +101,11 @@ public class SubjectController {
 				.semester(subject.getSemester())
 				.subjectCode(subject.getSubjectCode())
 				.build();
-		List<String> specNameList = new ArrayList<>();
-		for (Specialization spec : subject.getSpecializations()) {
-			specNameList.add(specService.getNameCode(spec.getId()));
-		}
-		response.setSpecializations(specNameList);
+//		List<String> specNameList = new ArrayList<>();
+//		for (Specialization spec : subject.getSpecializations()) {
+//			specNameList.add(specService.getNameCode(spec.getId()));
+//		}
+//		response.setSpecializations(specNameList);
 		response.setTeachers(teachers);
 		return response;
 	}

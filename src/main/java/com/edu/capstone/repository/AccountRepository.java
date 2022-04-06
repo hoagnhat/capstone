@@ -22,5 +22,5 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 	Account findTop1ByEmailIgnoreCaseContainsOrderByEmailDesc(String email);
 	Account findTop1ByIdIgnoreCaseContains(String id, Sort sort);
 	List<Account> findByIsActived(int isActived);
-	List<Account> findBySpecialization_id(int specId);
+	List<Account> findBySpecialization_id(int specId);	
 }
