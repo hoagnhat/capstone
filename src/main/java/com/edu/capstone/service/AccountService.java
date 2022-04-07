@@ -405,7 +405,10 @@ public class AccountService {
 		List<Profile> profiles = profileRepository.findAll();
 		for (Account account : accounts) {
 			List<String> roles = new ArrayList<>();
-			List<String> subjects = account.getTeachSubjects().stream().map(c -> c.getSubjectCode()).toList();			
+			List<String> subjects = new ArrayList<String>();
+			for (Subject sub : account.getTeachSubjects()) {
+				subjects.add(sub.getSubjectCode());
+			}
 			for (Role role : account.getRoles()) {
 				if (role.getRoleName().equals(AppConstant.ROLE_TEACHER) && account.getIsActived() == 1) {
 					Profile profile = profiles.stream().filter(p -> p.getAccountId().equals(account.getId()))
