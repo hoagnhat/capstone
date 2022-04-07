@@ -51,29 +51,29 @@ public class SpecializationController {
 		List<SpecResponse> responses = new ArrayList<>();
 		List<Specialization> specializations = specService.getAll();				
 		for (Specialization spec : specializations) {
-//			Set<String> subjectsss = new HashSet<>();	
+			Set<String> subjectsss = new HashSet<>();	
 //			int studentCounts = 0;
-//			Set<Subject> subjects = spec.getSubjects();
-//			List<Classs> classes = classRepo.findBySpecializationId(spec.getId());
-//			Set<String> classIds = new HashSet<String>();			
+			Set<Subject> subjects = spec.getSubjects();
+			List<Classs> classes = classRepo.findBySpecializationId(spec.getId());
+			Set<String> classIds = new HashSet<String>();			
 //			List<Account> students = accountRepo.findBySpecializationId(spec.getId());
 //			for (Account student : students) {
 //				if(student.getRoles().iterator().next().getRoleName().equalsIgnoreCase("ROLE_STUDENT")) {
 //					studentCounts++;
 //				}
 //			}	
-//			for (Classs classs : classes) {
-//				classIds.add(classs.getId());
-//			}
-//			for (Subject sub : subjects) {
-//				subjectsss.add(sub.getSubjectCode());
-//			}
+			for (Classs classs : classes) {
+				classIds.add(classs.getId());
+			}
+			for (Subject sub : subjects) {
+				subjectsss.add(sub.getSubjectCode());
+			}
 			SpecResponse response = SpecResponse.builder()
 					.specId(spec.getId())
 					.name(spec.getName())
-//					.classes(classIds)
+					.classes(classIds)
 //					.studentCounts(studentCounts)
-//					.subjects(subjectsss)
+					.subjects(subjectsss)
 					.build();
 			responses.add(response);
 		}
