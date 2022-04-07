@@ -418,8 +418,7 @@ public class AccountService {
 							.name(profile.getName()).avatar(profile.getAvatar()).age(profile.getAge())
 							.address(profile.getAddress()).gender(profile.getGender()).phone(profile.getPhone())
 							.email(account.getEmail()).personalEmail(profile.getPersonalEmail()).roles(roles)
-							.subjects(subjects).specialization(account.getSpecialization().getName())
-							.build();
+							.subjects(subjects).specialization(account.getSpecialization().getName()).build();
 					responses.add(response);
 				}
 			}
@@ -433,7 +432,11 @@ public class AccountService {
 		List<Profile> profiles = profileRepository.findAll();
 		for (Account account : accounts) {
 			List<String> roles = new ArrayList<>();
-			List<String> classs = account.getClasses().stream().map(c -> c.getId()).toList();			
+			List<String> classs = new ArrayList<String>();
+
+			for (Classs c : account.getClasses()) {
+				classs.add(c.getId());
+			}
 			for (Role role : account.getRoles()) {
 				if (role.getRoleName().equals(AppConstant.ROLE_STUDENT) && account.getIsActived() == 1) {
 					Profile profile = profiles.stream().filter(p -> p.getAccountId().equals(account.getId()))
@@ -443,8 +446,7 @@ public class AccountService {
 							.name(profile.getName()).avatar(profile.getAvatar()).age(profile.getAge())
 							.address(profile.getAddress()).gender(profile.getGender()).phone(profile.getPhone())
 							.email(account.getEmail()).personalEmail(profile.getPersonalEmail()).roles(roles)
-							.classs(classs).specialization(account.getSpecialization().getName())
-							.build();
+							.classs(classs).specialization(account.getSpecialization().getName()).build();
 					responses.add(response);
 				}
 			}
