@@ -165,6 +165,7 @@ public class ClassController {
 		cs.setSubject(null);
 		cs.setTeacher(null);
 		csRepo.deleteById(CSKey.builder().classsId(classId).subjectId(subjectId).build());
+		scheRepo.deleteByClassIdAndSubjectId(classId, subjectId);
 	}
 	
 	@DeleteMapping("/deletestudent")

@@ -20,6 +20,7 @@ import com.edu.capstone.entity.Schedule;
 import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.entity.Subject;
 import com.edu.capstone.repository.ClassSubjectRepository;
+import com.edu.capstone.repository.ProfileRepository;
 import com.edu.capstone.request.CreateSubjectRequest;
 import com.edu.capstone.request.SubjectRequest;
 import com.edu.capstone.response.StudentResponse;
@@ -44,9 +45,9 @@ public class SubjectController {
 	private ScheduleService scheduleService;
 	@Autowired
 	private ClassSubjectRepository csRepo;
+
 	@Autowired
-	private ClassService classService;
-	
+	private ProfileRepository profileRepository;
 	@GetMapping
 	
 	public List<SubjectResponse> getAll() {
@@ -88,12 +89,14 @@ public class SubjectController {
 	public SubjectResponse getById(@RequestParam("id") int id) {
 		Subject subject = subjectService.findById(id);
 		List<StudentResponse> teachers = new ArrayList<>();
+		List<Profile> profiles = profileRepository.findAll();
 		List<String> classes = new ArrayList<>();
 		for (ClassSubject cs : csRepo.findByKeySubjectId(subject.getId())) {
 			classes.add(cs.getKey().getClasssId());
 		}
 		for (Account teacher : subject.getTeachers()) {
-			Profile profile = profileService.findByAccountId(teacher.getId());
+			Profile profile = profiles.stream().filter(p -> p.getAccountId().equals(teacher.getId()))
+					.findFirst().orElse(null);
 			StudentResponse teacherResponse = StudentResponse.builder()
 					.accountId(profile.getAccountId())
 					.name(profile.getName())					
@@ -116,6 +119,35 @@ public class SubjectController {
 		return response;
 	}
 	
+	// Get teacher of subject
+	@GetMapping("/getTeachers/{id}")
+	public SubjectResponse getTeachersOfSubject(@RequestParam("id") int id) {
+		Subject subject = subjectService.findById(id);
+		List<Profile> profiles = profileRepository.findAll();
+		List<StudentResponse> teachers = new ArrayList<>();		
+		for (Account teacher : subject.getTeachers()) {
+			Profile profile = profiles.stream().filter(p -> p.getAccountId().equals(teacher.getId()))
+					.findFirst().orElse(null);
+			StudentResponse teacherResponse = StudentResponse.builder()
+					.accountId(profile.getAccountId())
+					.name(profile.getName())					
+					.build();
+			teachers.add(teacherResponse);
+		}
+		SubjectResponse response = SubjectResponse.builder()
+				.id(subject.getId())
+				.name(subject.getName())
+				.semester(subject.getSemester())
+				.subjectCode(subject.getSubjectCode())				
+				.build();
+//		List<String> specNameList = new ArrayList<>();
+//		for (Specialization spec : subject.getSpecializations()) {
+//			specNameList.add(specService.getNameCode(spec.getId()));
+//		}
+//		response.setSpecializations(specNameList);
+		response.setTeachers(teachers);
+		return response;
+	}
 	@PostMapping
 	public void create(@RequestBody CreateSubjectRequest request) {
 		subjectService.create(request);

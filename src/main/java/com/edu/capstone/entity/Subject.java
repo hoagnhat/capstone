@@ -65,6 +65,7 @@ public class Subject {
 	
 	@ToString.Exclude	
 	@ManyToMany(cascade = { CascadeType.PERSIST },fetch = FetchType.LAZY)
+	@Fetch(FetchMode.SUBSELECT)
 	private Set<Account> teachers = new HashSet<>();
 	
 	public void addSchedule(Schedule schedule) {

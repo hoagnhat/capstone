@@ -69,7 +69,7 @@ public class Account {
 	@Column(name = "token_expired_date")
 	private LocalDateTime tokenExpiredDate;
 
-	@ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = { CascadeType.MERGE })
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private Set<Role> roles = new HashSet<>();
