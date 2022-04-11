@@ -190,6 +190,8 @@ public class ClassController {
 					.room(schedule.getRoom())
 					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
 					.subjectName(schedule.getSubject().getName())
+					.timeStart(schedule.getTimeStart())
+					.timeEnd(schedule.getTimeEnd())
 					.build();
 			responses.add(response);
 		}

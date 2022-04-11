@@ -1,5 +1,7 @@
 package com.edu.capstone.response;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +17,6 @@ public class ClasssRes {
 	private int room;
 	private String teacherName;
 	private String subjectName;
-
+	private Date timeStart;
+	private Date timeEnd;
 }

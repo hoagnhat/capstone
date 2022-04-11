@@ -163,6 +163,10 @@ public class SubjectController {
 		for (Schedule schedule : subjectService.findById(subjectId).getSchedules()) {
 			scheduleService.delete(schedule.getId());
 		}
+		Subject subject = subjectService.findById(subjectId);
+		for (Specialization spec : subjectService.findById(subjectId).getSpecializations()) {
+			spec.removeSubjects(subject);
+		}		
 		subjectService.delete(subjectId);
 	}
 

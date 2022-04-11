@@ -14,6 +14,7 @@ import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.ClassSubject;
 import com.edu.capstone.entity.Classs;
 import com.edu.capstone.entity.Role;
+import com.edu.capstone.entity.Subject;
 import com.edu.capstone.repository.ClassSubjectRepository;
 import com.edu.capstone.response.AccountResponse;
 import com.edu.capstone.service.AccountService;
@@ -23,9 +24,7 @@ import com.edu.capstone.service.AccountService;
 public class AccountController {
 	
 	@Autowired
-	private AccountService accountService;
-	@Autowired
-	private ClassSubjectRepository csRepo;
+	private AccountService accountService;	
 	
 	@GetMapping
 	public AccountResponse getCurrentAccountInformation() {
@@ -37,11 +36,10 @@ public class AccountController {
 			roles.add(role.getRoleName());
 		}
 		for (Classs sclass : account.getClasses()) {
-			classs.add(sclass.getId());
-			List<ClassSubject> csubjectss = csRepo.findByKeyClasssId(sclass.getId());
-			for (ClassSubject subject : csubjectss) {
-				subjects.add(subject.getSubject().getSubjectCode());
-			}
+			classs.add(sclass.getId());			
+		}
+		for (Subject subject : account.getTeachSubjects()) {
+			subjects.add(subject.getSubjectCode());
 		}
 		AccountResponse response = AccountResponse.builder()
 				.accountId(account.getId())
