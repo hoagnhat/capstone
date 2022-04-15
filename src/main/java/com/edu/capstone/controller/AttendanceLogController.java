@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.capstone.entity.AttendanceLog;
 import com.edu.capstone.entity.Profile;
+import com.edu.capstone.repository.ProfileRepository;
 import com.edu.capstone.request.AttendanceLogRequest;
 import com.edu.capstone.request.UpdateAttendanceLogRequest;
 import com.edu.capstone.response.LogResponse;
@@ -31,7 +32,8 @@ public class AttendanceLogController {
 	private AttendanceLogService logService;
 	@Autowired
 	private ProfileService profileService;
-
+	@Autowired
+	private ProfileRepository profileRepo;
 	@PostMapping(path = "/take")
 	public void takeAttendance(@RequestBody List<AttendanceLogRequest> request) {
 		for (AttendanceLogRequest rq : request) {
@@ -49,9 +51,10 @@ public class AttendanceLogController {
 	@GetMapping
 	public List<LogResponse> getBySlotId(@RequestParam("id") int slotId) {
 		List<AttendanceLog> logs = logService.getLogBySlotId(slotId);
+		
 		List<LogResponse> responses = new ArrayList<>();
 		for (AttendanceLog log : logs) {
-			Profile a = profileService.findByAccountId(log.getStudentId());
+			Profile a = profileRepo.getById(log.getStudentId());
 			LogResponse response = LogResponse.builder().accountId(log.getStudentId()).name(a.getName())
 					.avatar(a.getAvatar()).status(log.getStatus()).description(log.getDescription()).build();
 			responses.add(response);

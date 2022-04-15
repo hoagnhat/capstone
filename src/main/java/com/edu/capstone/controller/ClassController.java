@@ -1,5 +1,8 @@
 package com.edu.capstone.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -7,7 +10,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.ClassSubject;
@@ -34,8 +50,11 @@ import com.edu.capstone.request.ClassRequest;
 import com.edu.capstone.response.ClassResponse;
 import com.edu.capstone.response.ClassSubjectResponse;
 import com.edu.capstone.response.ClasssRes;
+import com.edu.capstone.response.ScheResponse;
+import com.edu.capstone.response.ScheSubResponse;
 import com.edu.capstone.response.StudentResponse;
 import com.edu.capstone.service.ClassService;
+import com.edu.capstone.service.ExcelHelper;
 import com.edu.capstone.service.ProfileService;
 
 @RestController
@@ -56,7 +75,9 @@ public class ClassController {
 	private ScheduleRepository scheRepo;
 	@Autowired
 	private ProfileRepository profileRepository;
-	@GetMapping
+	@Autowired
+	private ExcelHelper excelHelper;
+	@GetMapping	
 	public List<ClassResponse> getAll() {
 		List<ClassResponse> responses = new ArrayList<>();		
 		for (Classs classs : classService.getAll()) {
@@ -170,29 +191,22 @@ public class ClassController {
 	
 	@DeleteMapping("/deletestudent")
 	public void deleteStudentOutClass(@RequestParam("classId") String classId, @RequestParam("studentId") String accountId) {
-		Classs classs = classService.findById(classId);
-		classs.getStudents().remove(accRepo.findById(accountId).get());
-		classRepo.saveAndFlush(classs);
+		classService.deleteStudent(classId, accountId);
 	}
 	
 	@GetMapping("/ongoing")
-	public List<ClasssRes> getOnGoingClass() {
+	public List<ScheResponse> getOnGoingClass() {
 		LocalDateTime now = LocalDateTime.now();		
-		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		String nowStr = now.format(formatter1);
-		LocalDateTime nowEnd = LocalDateTime.parse(nowStr + "T23:59:59");		
+		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");		
+		LocalDateTime nowEnd = LocalDateTime.now().plusHours(1).plusMinutes(30);		
 		List<Schedule> schedules = scheRepo.findByTimeEndBetween(convertToDateViaInstant(now), convertToDateViaInstant(nowEnd));
-		List<ClasssRes> responses = new ArrayList<>();
-		for (Schedule schedule : schedules) {
-			Classs classs = schedule.getClasss();
-			ClasssRes response = ClasssRes.builder()
-					.classId(classs.getId())
-					.room(schedule.getRoom())
-					.teacherName(profileService.findByAccountId(schedule.getTeacher().getId()).getName())
-					.subjectName(schedule.getSubject().getName())
-					.timeStart(schedule.getTimeStart())
-					.timeEnd(schedule.getTimeEnd())
-					.build();
+		List<ScheResponse> responses = new ArrayList<>();
+		for (Schedule schedule : schedules) {			
+			ScheResponse response  = ScheResponse.builder().id(schedule.getId()).classId(schedule.getClasss().getId()).room(schedule.getRoom())
+			.teacherName(profileRepository.getById(schedule.getTeacher().getId()).getName())
+			.subject(ScheSubResponse.builder().code(schedule.getSubject().getSubjectCode()).build())
+			.timeStart(schedule.getTimeStart()).timeEnd(schedule.getTimeEnd()).status(schedule.getStatus())
+			.totalStudents(schedule.getClasss().getStudents().size()).build();			
 			responses.add(response);
 		}
 		return responses;
@@ -235,4 +249,24 @@ public class ClassController {
 		}
 		return responses;
 	}
+	@PostMapping(path = "/import/student", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void importStudent(@RequestParam("file") MultipartFile file) {
+		if (ExcelHelper.hasExcelFormat(file)) {
+			try {
+				classService.importStudent(file);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@GetMapping("/download/samplefile")
+	public void downloadCsv(HttpServletResponse response) throws IOException {
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment; filename=sample.xlsx");
+		ByteArrayInputStream stream = ExcelHelper.classStudentSample();
+		IOUtils.copy(stream, response.getOutputStream());
+	}
+	
 }

@@ -1,12 +1,23 @@
 package com.edu.capstone.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +53,7 @@ public class AppController {
 	public String success() {
 //		Account account = accountService.getCurrentAccount();
 //		return account.getId();
-		return"Login successfull";
+		return "Login successfull";
 	}
 
 	@PostMapping(path = "/register")
@@ -77,7 +88,7 @@ public class AppController {
 			}
 		}
 	}
-	
+
 	@GetMapping("/total")
 	public TotalResponse getTotal() {
 		List<Account> teachers = new ArrayList<>();
@@ -95,12 +106,17 @@ public class AppController {
 				}
 			}
 		}
-		TotalResponse response = TotalResponse.builder()
-				.classCount((int) classRepo.count())
-				.teacherCount(teachers.size())
-				.studentCount(students.size())
-				.build();
+		TotalResponse response = TotalResponse.builder().classCount((int) classRepo.count())
+				.teacherCount(teachers.size()).studentCount(students.size()).build();
 		return response;
 	}
 
-}
+	@GetMapping("/download/samplefile")
+	public void downloadCsv(HttpServletResponse response) throws IOException {
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment; filename=sample.xlsx");
+		ByteArrayInputStream stream = ExcelHelper.registerSample();
+		IOUtils.copy(stream, response.getOutputStream());
+	}
+
+	}

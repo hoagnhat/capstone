@@ -62,9 +62,9 @@ public class Classs {
 	@Fetch(FetchMode.SUBSELECT)	
 	private Set<Account> students = new HashSet<>();
 	
-	public void addStudent(Account teacher) {
-		students.add(teacher);
-		teacher.getClasses().add(this);
+	public void addStudent(Account student) {
+		students.add(student);
+		student.getClasses().add(this);
 	}
 
 	public void removeStudent(Account student) {
