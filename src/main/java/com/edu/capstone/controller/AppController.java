@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.edu.capstone.common.constant.AppConstant;
 import com.edu.capstone.entity.Account;
 import com.edu.capstone.entity.Role;
+import com.edu.capstone.repository.AccountRepository;
 import com.edu.capstone.repository.ClassRepository;
 import com.edu.capstone.request.AccountRequest;
 import com.edu.capstone.request.ChangePasswordRequest;
@@ -43,16 +44,18 @@ import com.edu.capstone.service.ExcelHelper;
  */
 @RestController
 public class AppController {
-
 	@Autowired
 	private AccountService accountService;
 	@Autowired
 	private ClassRepository classRepo;
+	@Autowired
+	private AccountRepository accountRepository;
 
 	@GetMapping
 	public String success() {
-//		Account account = accountService.getCurrentAccount();
-//		return account.getId();
+		Account account = accountService.getCurrentAccount();
+		account.setStatus(AppConstant.ACCOUNT_STATUS_ONLINE);
+		accountRepository.saveAndFlush(account);
 		return "Login successfull";
 	}
 
@@ -69,7 +72,7 @@ public class AppController {
 
 	@PostMapping(path = "/logout")
 	public void fakeLogout() {
-		// do logout
+		
 	}
 
 	@PostMapping(path = "/changepassword")
@@ -119,4 +122,4 @@ public class AppController {
 		IOUtils.copy(stream, response.getOutputStream());
 	}
 
-	}
+}

@@ -7,6 +7,7 @@ import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -49,9 +50,8 @@ public class Specialization {
 	private String name; // Tên chuyên ngành
 	
 	@JsonIgnore
-	@ToString.Exclude
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@ManyToMany(mappedBy = "specializations", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ToString.Exclude	
+	@ManyToMany(mappedBy = "specializations", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@Fetch(FetchMode.SUBSELECT)	
 	private Set<Subject> subjects = new HashSet<>();
 	

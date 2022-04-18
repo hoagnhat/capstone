@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -52,17 +53,19 @@ public class ExcelHelper {
 				Iterator<Cell> cellsInRow = currentRow.iterator();
 				AccountRequest request = new AccountRequest();
 				int cellIdx = 0;
+				DataFormatter formatter = new DataFormatter();
+
 				while (cellsInRow.hasNext()) {
 					Cell currentCell = cellsInRow.next();
 					switch (cellIdx) {
-					case 0:
-						request.setKhoa(Integer.parseInt(currentCell.getStringCellValue()));
+					case 0:						
+						request.setKhoa(Integer.parseInt(formatter.formatCellValue(currentCell)));
 						break;
 					case 1:
-						request.setRoleId(Integer.parseInt(currentCell.getStringCellValue()));
+						request.setRoleId(Integer.parseInt(formatter.formatCellValue(currentCell)));
 						break;
 					case 2:
-						request.setSpecializationId(Integer.parseInt(currentCell.getStringCellValue()));
+						request.setSpecializationId(Integer.parseInt(formatter.formatCellValue(currentCell)));
 						break;
 					case 3:
 						request.setPersonalEmail(currentCell.getStringCellValue());
@@ -71,7 +74,7 @@ public class ExcelHelper {
 						request.setName(currentCell.getStringCellValue());
 						break;
 					case 5:
-						request.setAge(Integer.parseInt(currentCell.getStringCellValue()));
+						request.setAge(Integer.parseInt(formatter.formatCellValue(currentCell)));
 						break;
 					case 6:
 						request.setAvatar(currentCell.getStringCellValue());
@@ -80,7 +83,7 @@ public class ExcelHelper {
 						request.setPhone(currentCell.getStringCellValue());
 						break;
 					case 8:
-						request.setGender(Integer.parseInt(currentCell.getStringCellValue()));
+						request.setGender(Integer.parseInt(formatter.formatCellValue(currentCell)));
 						break;
 					case 9:
 						request.setAddress(currentCell.getStringCellValue());
@@ -166,7 +169,7 @@ public class ExcelHelper {
 			Row dataRow = sheet.createRow(1);
 
 			dataRow.createCell(0).setCellValue("14");
-			dataRow.createCell(1).setCellValue("2");
+			dataRow.createCell(1).setCellValue('2');
 			dataRow.createCell(2).setCellValue("1");
 			dataRow.createCell(3).setCellValue("nguyenndb511@gmail.com");
 			dataRow.createCell(4).setCellValue("Nguyễn Duy Bảo Nguyên");

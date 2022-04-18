@@ -68,7 +68,8 @@ public class Account {
 	private String verifyToken; // Token để xác thực tài khoản
 	@Column(name = "token_expired_date")
 	private LocalDateTime tokenExpiredDate;
-
+	@Column(name = "status")
+	private String status;
 	@ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@Fetch(value = FetchMode.SUBSELECT)

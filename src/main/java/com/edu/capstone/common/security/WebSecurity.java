@@ -1,5 +1,9 @@
 package com.edu.capstone.common.security;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +15,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.edu.capstone.common.security.service.CustomUserDetailsService;
+import com.edu.capstone.service.AccountService;
 
 /**
  * @author NhatHH Date: Jan 30, 2022
@@ -25,7 +32,8 @@ import com.edu.capstone.common.security.service.CustomUserDetailsService;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurity extends WebSecurityConfigurerAdapter {
-
+	@Autowired
+	private AccountService accountService;
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 	@Autowired
@@ -58,11 +66,18 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				.formLogin()
 					.loginProcessingUrl("/login")
 					.usernameParameter("email")
-					.passwordParameter("password")
+					.passwordParameter("password")					
 					.permitAll()
 			.and()
 				.logout()
-					.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+					.logoutSuccessHandler(new LogoutSuccessHandler() {
+			
+						@Override
+						public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+								throws IOException, ServletException {
+							accountService.setAccountOffline(authentication); 							
+						}
+					})	
 					.permitAll();
 	}
 

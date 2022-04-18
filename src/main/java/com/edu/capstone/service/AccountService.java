@@ -398,6 +398,17 @@ public class AccountService {
 		}
 		return responses;
 	}
+	public List<AccountResponse> getRecentlyOnline() {
+		List<AccountResponse> responses = new ArrayList<>();
+		List<Account> accounts = accountRepository.findByStatus("ONLINE");
+		for (Account account : accounts) {
+			Profile profile = profileRepository.findById(account.getId()).get();
+			AccountResponse response = AccountResponse.builder().accountId(account.getId()).name(profile.getName())
+					.avatar(profile.getAvatar()).build();
+			responses.add(response);
+		}
+		return responses;
+	}
 
 	public List<AccountResponse> getTeachers() {
 		List<AccountResponse> responses = new ArrayList<>();
@@ -452,6 +463,12 @@ public class AccountService {
 			}
 		}
 		return responses;
+	}
+	public void setAccountOffline(Authentication authentication) {		
+		String email = authentication.getName();
+		Account account = findByEmail(email);
+		account.setStatus(AppConstant.ACCOUNT_STATUS_OFFLINE);
+		accountRepository.saveAndFlush(account);
 	}
 
 }

@@ -20,6 +20,8 @@ public class AppConstant {
 	
 	public static final long EXPIRED_LIMIT_TIME = 15;
 	
+	public static final String ACCOUNT_STATUS_ONLINE = "ONLINE";
+	public static final String ACCOUNT_STATUS_OFFLINE = "OFFLINE";
 	
 	public static final String SCHEDULE_NOT_YET_STATUS = "NOT YET";
 	public static final String SCHEDULE_ATTENDED_STATUS = "ATTENDED";

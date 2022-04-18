@@ -52,7 +52,7 @@ public class SpecializationController {
 		List<Specialization> specializations = specService.getAll();				
 		for (Specialization spec : specializations) {
 			Set<String> subjectsss = new HashSet<>();	
-//			int studentCounts = 0;
+			int studentCounts = 0;
 			Set<Subject> subjects = spec.getSubjects();
 			List<Classs> classes = classRepo.findBySpecializationId(spec.getId());
 			Set<String> classIds = new HashSet<String>();			
@@ -72,7 +72,7 @@ public class SpecializationController {
 					.specId(spec.getId())
 					.name(spec.getName())
 					.classes(classIds)
-//					.studentCounts(studentCounts)
+					.studentCounts(studentCounts)
 					.subjects(subjectsss)
 					.build();
 			responses.add(response);

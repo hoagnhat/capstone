@@ -68,15 +68,9 @@ public class ClassController {
 	@Autowired
 	private ProfileService profileService;
 	@Autowired
-	private AccountRepository accRepo;
-	@Autowired
-	private ClassRepository classRepo;
-	@Autowired
 	private ScheduleRepository scheRepo;
 	@Autowired
-	private ProfileRepository profileRepository;
-	@Autowired
-	private ExcelHelper excelHelper;
+	private ProfileRepository profileRepository;	
 	@GetMapping	
 	public List<ClassResponse> getAll() {
 		List<ClassResponse> responses = new ArrayList<>();		
@@ -197,7 +191,6 @@ public class ClassController {
 	@GetMapping("/ongoing")
 	public List<ScheResponse> getOnGoingClass() {
 		LocalDateTime now = LocalDateTime.now();		
-		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");		
 		LocalDateTime nowEnd = LocalDateTime.now().plusHours(1).plusMinutes(30);		
 		List<Schedule> schedules = scheRepo.findByTimeEndBetween(convertToDateViaInstant(now), convertToDateViaInstant(nowEnd));
 		List<ScheResponse> responses = new ArrayList<>();

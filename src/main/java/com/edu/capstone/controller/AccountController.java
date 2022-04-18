@@ -69,5 +69,9 @@ public class AccountController {
 	public List<AccountResponse> getStudents() {
 		return accountService.getStudents();
 	}
-
+	
+	@GetMapping("/recently")
+	public List<AccountResponse> getRecently() {
+		return accountService.getRecentlyOnline();
+	}
 }

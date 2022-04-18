@@ -28,6 +28,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 	@Transactional(readOnly = true)
 	List<Schedule> findBySubjectId(int subjectId);
 	@Modifying	
+	@Transactional
 	@Query(value = "Delete from schedule where class_id = ?1 and subject_id = ?2", nativeQuery = true)
 	void deleteByClassIdAndSubjectId(String classId, int subjectId);
 }
