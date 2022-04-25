@@ -11,17 +11,24 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.edu.capstone.entity.Role;
+import com.edu.capstone.entity.Specialization;
 import com.edu.capstone.request.AccountRequest;
 
 @Service
 public class ExcelHelper {
 	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	static String[] HEADERs = { "Khoa", "Role Id", "Specialization Id", "Person Email", "Name", "Age", "Avatar", "Phone",
+	static String[] HEADERs = { "Khoa", "Role Name", "Specialization Name", "Person Email", "Name", "Age", "Avatar", "Phone",
 			"Gender", "Address" };
 	static String SHEET = "Accounts";
+	@Autowired
+	private static RoleService roleService;
+	@Autowired
+	private static SpecializationService specService;
 
 	public static boolean hasExcelFormat(MultipartFile file) {
 		if (!TYPE.equals(file.getContentType())) {
@@ -54,10 +61,12 @@ public class ExcelHelper {
 						request.setKhoa(Integer.parseInt(currentCell.getStringCellValue()));
 						break;
 					case 1:
-						request.setRoleId(Integer.parseInt(currentCell.getStringCellValue()));
+						Role role = roleService.findByRoleName(currentCell.getStringCellValue());
+						request.setRoleId(role.getId());
 						break;
 					case 2:
-						request.setSpecializationId(Integer.parseInt(currentCell.getStringCellValue()));
+						Specialization spec = specService.findByName(currentCell.getStringCellValue());
+						request.setSpecializationId(spec.getId());
 						break;
 					case 3:
 						request.setPersonalEmail(currentCell.getStringCellValue());
